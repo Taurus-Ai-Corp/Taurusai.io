@@ -199,7 +199,7 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
             <div className="flex items-center gap-2">
               <Award className="w-6 h-6 text-warning" />
-              <span className="text-sm font-medium text-foreground">RBI Harbinger Award Winner</span>
+              <span className="text-sm font-medium text-foreground">RBI Harbinger</span>
             </div>
             <div className="flex items-center gap-2">
               <Shield className="w-6 h-6 text-primary" />
@@ -207,7 +207,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-success" />
-              <span className="text-sm font-medium text-foreground">$150K Hedera Grant</span>
+              <span className="text-sm font-medium text-foreground">Hedera Hashgraph Platform integrated</span>
             </div>
           </div>
         </div>
