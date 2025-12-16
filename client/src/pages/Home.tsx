@@ -106,8 +106,8 @@ export default function Home() {
 
               {/* Main Headline */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
-                Quantum-Safe Infrastructure for{" "}
-                <span className="gradient-text">Enterprise Finance</span>
+                Quantum-Safe Infrastructure{" "}
+                <span className="gradient-text">as a Service</span>
               </h1>
 
               {/* Subheadline */}

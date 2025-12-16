@@ -58,7 +58,7 @@ export default function Navbar() {
             <img 
               src="/images/Logo.naked.png" 
               alt="Taurus AI" 
-              className="h-10 w-auto"
+              className="h-10 w-auto" style={{backgroundColor: '#0c1813', width: '45px', height: '45px'}}
             />
             <span className="font-bold text-xl text-foreground">Taurus AI</span>
           </Link>
