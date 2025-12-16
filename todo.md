@@ -1,0 +1,36 @@
+# Taurus AI Corp Website - TODO
+
+## Core Features
+- [x] Design system setup (cobalt blue, charcoal, silver theme)
+- [x] Responsive navigation with smooth scrolling
+- [x] Hero section with quantum threat urgency messaging
+- [x] Product overview with interactive comparison table
+- [x] Case study carousel with expandable modals
+- [x] Multi-author blog hub with category filters
+- [x] Investor & press center with downloadable assets
+- [x] Global search across products, docs, and news
+- [x] Contact form and demo request system
+- [x] Customer testimonials and social proof section
+
+## Database & Backend
+- [x] Database schema for products, case studies, blog posts
+- [x] API endpoints for content retrieval
+- [x] Lead capture and contact form submission
+- [x] Search indexing and filtering
+
+## Visual Elements
+- [x] Sharp geometric patterns and backgrounds
+- [x] Enterprise-grade typography
+- [x] Hover states and dynamic highlights
+- [x] Responsive design for all screen sizes
+
+## Pages
+- [x] Homepage (hero, products, testimonials, CTA)
+- [x] Products page with comparison
+- [x] Case Studies page
+- [x] Blog/Insights hub
+- [x] Investor Relations page
+- [x] Press Center page
+- [x] Contact/Demo Request page
+- [x] Global Search page
+
