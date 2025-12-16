@@ -13,6 +13,7 @@ import InvestorRelations from "./pages/InvestorRelations";
 import PressCenter from "./pages/PressCenter";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";
+import LiveChat from "./components/LiveChat";
 
 function Router() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <LiveChat />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
