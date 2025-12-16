@@ -50,3 +50,14 @@
 - [x] Update product cards with platform screenshots
 - [x] Add external platform links to products
 - [x] Integrate Notion MCP data for platform details
+
+## Interactive Comparison Table
+- [ ] Create ProductComparisonTable component with hover-to-highlight
+- [ ] Add row and column highlighting on hover
+- [ ] Include all product features in comparison
+- [ ] Integrate into Products page
+
+## Email Notifications
+- [x] Update lead capture to send owner notifications
+- [x] Configure notification emails to taurus.ai@taas-ai.com and admin@taurusai.io
+- [x] Test notification delivery for demo requests

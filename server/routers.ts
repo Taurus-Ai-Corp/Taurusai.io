@@ -178,10 +178,31 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const leadId = await db.createLead(input);
         
+        // Build detailed notification content
+        const leadTypeLabel = {
+          'demo-request': '🎯 Demo Request',
+          'contact': '📧 Contact Form',
+          'newsletter': '📰 Newsletter Signup',
+          'whitepaper': '📄 Whitepaper Download'
+        }[input.leadType] || 'New Lead';
+        
+        const productsText = input.productsInterested?.length 
+          ? `\n\n📦 Products Interested:\n${input.productsInterested.join(', ')}`
+          : '';
+        
+        const notificationContent = `
+👤 Contact: ${input.firstName} ${input.lastName}
+🏢 Company: ${input.company}${input.jobTitle ? ` (${input.jobTitle})` : ''}
+📧 Email: ${input.email}${input.phone ? `\n📞 Phone: ${input.phone}` : ''}${input.country ? `\n🌍 Location: ${input.country}` : ''}${input.companySize ? `\n👥 Company Size: ${input.companySize}` : ''}${input.industry ? `\n🏭 Industry: ${input.industry}` : ''}${productsText}${input.message ? `\n\n💬 Message:\n${input.message}` : ''}
+
+---
+📨 Notification sent to: taurus.ai@taas-ai.com, admin@taurusai.io
+        `.trim();
+        
         // Notify owner of new lead
         await notifyOwner({
-          title: `New ${input.leadType === 'demo-request' ? 'Demo Request' : 'Contact'} from ${input.firstName} ${input.lastName}`,
-          content: `Company: ${input.company}\nEmail: ${input.email}\n${input.message ? `Message: ${input.message}` : ''}`,
+          title: `${leadTypeLabel} from ${input.firstName} ${input.lastName} at ${input.company}`,
+          content: notificationContent,
         });
         
         return { success: true, leadId };
