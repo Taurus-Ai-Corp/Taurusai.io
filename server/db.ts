@@ -369,3 +369,10 @@ export async function globalSearch(query: string): Promise<{
     assets: assetsResult,
   };
 }
+
+// ============ STRIPE FUNCTIONS ============
+export async function updateUserStripeCustomerId(userId: number, stripeCustomerId: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ stripeCustomerId }).where(eq(users.id, userId));
+}

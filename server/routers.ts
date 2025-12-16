@@ -5,6 +5,8 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import * as db from "./db";
 import { notifyOwner } from "./_core/notification";
+import { isStripeConfigured, getOrCreateCustomer, createCheckoutSession, createCustomerPortalSession } from "./stripe/stripe";
+import { subscriptionTiers, formatPrice } from "./stripe/products";
 
 export const appRouter = router({
   system: systemRouter,
@@ -216,6 +218,70 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return db.globalSearch(input.query);
       }),
+  }),
+
+  // Stripe Payment Router
+  stripe: router({
+    isConfigured: publicProcedure.query(() => ({ configured: isStripeConfigured() })),
+
+    getPricing: publicProcedure.query(() => ({
+      subscriptions: subscriptionTiers.map(tier => ({
+        ...tier,
+        priceMonthlyFormatted: formatPrice(tier.priceMonthly),
+        priceYearlyFormatted: formatPrice(tier.priceYearly),
+      })),
+    })),
+
+    createSubscriptionCheckout: protectedProcedure
+      .input(z.object({
+        tierId: z.string(),
+        billingPeriod: z.enum(['monthly', 'yearly']),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (!isStripeConfigured()) {
+          throw new Error('Stripe is not configured');
+        }
+
+        const tier = subscriptionTiers.find(t => t.id === input.tierId);
+        if (!tier) throw new Error('Invalid tier');
+
+        const customerId = await getOrCreateCustomer(
+          ctx.user.id,
+          ctx.user.email || '',
+          ctx.user.name || undefined,
+          ctx.user.stripeCustomerId
+        );
+
+        if (!customerId) throw new Error('Failed to create customer');
+
+        if (!ctx.user.stripeCustomerId) {
+          await db.updateUserStripeCustomerId(ctx.user.id, customerId);
+        }
+
+        const amount = input.billingPeriod === 'monthly' ? tier.priceMonthly : tier.priceYearly;
+        const origin = ctx.req.headers.origin || 'http://localhost:3000';
+        
+        const checkoutUrl = await createCheckoutSession(
+          customerId,
+          tier.id,
+          tier.name,
+          amount,
+          input.billingPeriod,
+          ctx.user.id,
+          ctx.user.email || '',
+          ctx.user.name,
+          origin
+        );
+
+        return { checkoutUrl };
+      }),
+
+    getPortalUrl: protectedProcedure.mutation(async ({ ctx }) => {
+      if (!ctx.user.stripeCustomerId) throw new Error('No subscription found');
+      const origin = ctx.req.headers.origin || 'http://localhost:3000';
+      const portalUrl = await createCustomerPortalSession(ctx.user.stripeCustomerId, `${origin}/account`);
+      return { portalUrl };
+    }),
   }),
 });
 

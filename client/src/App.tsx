@@ -13,6 +13,8 @@ import InvestorRelations from "./pages/InvestorRelations";
 import PressCenter from "./pages/PressCenter";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";
+import Pricing from "./pages/Pricing";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import LiveChat from "./components/LiveChat";
 
 function Router() {
@@ -30,6 +32,8 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/demo" component={Contact} />
       <Route path="/search" component={Search} />
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/payment/success" component={PaymentSuccess} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
