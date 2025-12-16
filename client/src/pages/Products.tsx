@@ -20,20 +20,23 @@ import {
   TrendingUp,
   ExternalLink,
 } from "lucide-react";
+import ProductComparisonTable from "@/components/ProductComparisonTable";
 
 // Product data with images and external links
-const productData: Record<string, { image: string; screenshot: string; link: string; color: string }> = {
+const productData: Record<string, { image: string; screenshot: string; link: string; color: string; logo?: string }> = {
   bizflow: {
     image: "/images/TaurusAI.BizFlow™.png",
     screenshot: "/images/cmgvdpkm.manus.space-BizFlowAI-AdvancedAutomationPlatform-fpscreenshot.png",
     link: "https://cmgvdpkm.manus.space",
-    color: "from-cyan to-teal",
+    color: "from-cyan to-purple",
+    logo: "/images/bizflow-logo.jpg",
   },
   "q-grid": {
-    image: "/images/FuturisticCircuitBoardClose-Up.png",
+    image: "/images/qgrid-logo.png",
     screenshot: "/images/q-grid.net-q-gridnetapp-fpscreenshot.jpeg",
     link: "https://q-grid.net",
     color: "from-quantum to-cyan",
+    logo: "/images/qgrid-logo.png",
   },
   assetgrid: {
     image: "/images/FinancialDataDisplay.png",
@@ -242,62 +245,7 @@ export default function Products() {
             </p>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left p-4 text-foreground font-semibold">Feature</th>
-                  {products?.map((product) => (
-                    <th 
-                      key={product.id} 
-                      className={`text-center p-4 text-foreground font-semibold ${
-                        selectedProduct === product.slug ? 'bg-primary/10' : ''
-                      }`}
-                    >
-                      {product.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-border">
-                  <td className="p-4 text-muted-foreground">Quantum-Resistant</td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="p-4 text-muted-foreground">AI-Powered</td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-muted-foreground mx-auto opacity-30" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="p-4 text-muted-foreground">Blockchain Integration</td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-muted-foreground mx-auto opacity-30" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-muted-foreground mx-auto opacity-30" /></td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="p-4 text-muted-foreground">Real-time Analytics</td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                </tr>
-                <tr className="border-b border-border">
-                  <td className="p-4 text-muted-foreground">Enterprise SSO</td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <ProductComparisonTable />
         </div>
       </section>
 

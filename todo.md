@@ -61,3 +61,11 @@
 - [x] Update lead capture to send owner notifications
 - [x] Configure notification emails to taurus.ai@taas-ai.com and admin@taurusai.io
 - [x] Test notification delivery for demo requests
+
+## Product Enhancements
+- [x] Add interactive feature comparison table with hover-to-highlight
+- [x] Update subheadline to align with "as a Service" positioning
+- [x] Add B logo image for BizFlow product
+- [x] Add Q-Grid logo image for Q-Grid product
+- [x] Create animated 3D solar system ecosystem section
+- [x] Integrate Taurus AI ecosystem image with interactive planets

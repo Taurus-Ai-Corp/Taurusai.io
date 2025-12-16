@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import EcosystemOrbit from "@/components/EcosystemOrbit";
 import {
   ArrowRight,
   Shield,
@@ -112,9 +113,9 @@ export default function Home() {
 
               {/* Subheadline */}
               <p className="text-xl text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-                Complete digital transformation without organizational disruption. 
-                Deploy quantum-resistant security, workflow automation, and enterprise 
-                intelligence in 90 days.
+                Enterprise-grade quantum-safe infrastructure delivered as a service. 
+                Deploy AI-powered automation, blockchain integration, and post-quantum 
+                cryptography—all managed, scalable, and ready in days, not months.
               </p>
 
               {/* Value Props */}
@@ -283,6 +284,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Ecosystem Orbit Section */}
+      <EcosystemOrbit />
 
       {/* Technology Showcase */}
       <section className="py-24 relative overflow-hidden">
