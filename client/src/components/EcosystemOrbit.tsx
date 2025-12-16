@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink, ArrowRight } from "lucide-react";
+import { X, ExternalLink, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+interface CarouselImage {
+  src: string;
+  title: string;
+}
 
 interface OrbitItem {
   id: string;
@@ -13,6 +18,7 @@ interface OrbitItem {
   link?: string;
   angle: number;
   orbitRadius: number;
+  carouselImages?: CarouselImage[];
 }
 
 const orbitItems: OrbitItem[] = [
@@ -30,11 +36,18 @@ const orbitItems: OrbitItem[] = [
     id: "backoffice",
     title: "Back Office",
     subtitle: "Task Automation",
-    description: "Intelligent automation of back-office operations including document processing, data entry, reconciliation, and compliance workflows.",
+    description: "Intelligent automation of back-office operations including document processing, data entry, reconciliation, and compliance workflows. Unlock efficiency and slash costs with intelligent automation.",
     icon: "⚙️",
     color: "from-purple-500 to-pink-500",
     angle: 45,
     orbitRadius: 180,
+    carouselImages: [
+      { src: "/carousel/2_Unlock-efficiency-and-slash-costs-with-intelligent-automation.png", title: "Unlock Efficiency" },
+      { src: "/carousel/3_Why-Automate-Your-Back-Office.png", title: "Why Automate" },
+      { src: "/carousel/4_Key-Tasks-You-Can-Automate-Today.png", title: "Key Tasks" },
+      { src: "/carousel/5_Tools-Powering-Back-Office-Automation-in-2025.png", title: "Power Tools 2025" },
+      { src: "/carousel/6_Ready-to-Transform-Your-Back-Office.png", title: "Transform Today" },
+    ],
   },
   {
     id: "saas",
@@ -85,6 +98,13 @@ const orbitItems: OrbitItem[] = [
     color: "from-blue-500 to-indigo-500",
     angle: 270,
     orbitRadius: 180,
+    carouselImages: [
+      { src: "/carousel/2_Transforming-Education-with-an-Integrated-Management-System.png", title: "Transforming Education" },
+      { src: "/carousel/3_What-is-an-Integrated-Educational-Management-System-IEMS.png", title: "What is IEMS" },
+      { src: "/carousel/4_Real-Impact-How-IEMS-Revolutionizes-Schools.png", title: "Real Impact" },
+      { src: "/carousel/5_Safety-and-Engagement-Powered-by-Technology.png", title: "Safety & Engagement" },
+      { src: "/carousel/6_Ready-to-Reimagine-Your-Schools-Future.png", title: "Reimagine Future" },
+    ],
   },
   {
     id: "healthcare",
@@ -101,6 +121,28 @@ const orbitItems: OrbitItem[] = [
 export default function EcosystemOrbit() {
   const [selectedItem, setSelectedItem] = useState<OrbitItem | null>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  const handleItemClick = (item: OrbitItem) => {
+    setSelectedItem(item);
+    setCarouselIndex(0);
+  };
+
+  const nextSlide = () => {
+    if (selectedItem?.carouselImages) {
+      setCarouselIndex((prev) => 
+        prev === selectedItem.carouselImages!.length - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  const prevSlide = () => {
+    if (selectedItem?.carouselImages) {
+      setCarouselIndex((prev) => 
+        prev === 0 ? selectedItem.carouselImages!.length - 1 : prev - 1
+      );
+    }
+  };
 
   return (
     <section className="py-24 relative overflow-hidden bg-gradient-to-b from-background via-card/30 to-background">
@@ -202,7 +244,7 @@ export default function EcosystemOrbit() {
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedItem(item)}
+                  onClick={() => handleItemClick(item)}
                   onMouseEnter={() => setHoveredItem(item.id)}
                   onMouseLeave={() => setHoveredItem(null)}
                   className={`
@@ -261,7 +303,7 @@ export default function EcosystemOrbit() {
         </p>
       </div>
 
-      {/* Modal */}
+      {/* Modal with Carousel */}
       <AnimatePresence>
         {selectedItem && (
           <motion.div
@@ -276,7 +318,7 @@ export default function EcosystemOrbit() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-card border border-border rounded-2xl max-w-lg w-full p-6 shadow-2xl"
+              className="bg-card border border-border rounded-2xl max-w-4xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${selectedItem.color} flex items-center justify-center text-3xl`}>
@@ -298,6 +340,63 @@ export default function EcosystemOrbit() {
               <p className="text-muted-foreground mb-6 leading-relaxed">
                 {selectedItem.description}
               </p>
+
+              {/* Carousel Section */}
+              {selectedItem.carouselImages && selectedItem.carouselImages.length > 0 && (
+                <div className="mb-6">
+                  <div className="relative rounded-xl overflow-hidden bg-black/20">
+                    <motion.img
+                      key={carouselIndex}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      src={selectedItem.carouselImages[carouselIndex].src}
+                      alt={selectedItem.carouselImages[carouselIndex].title}
+                      className="w-full h-auto max-h-[400px] object-contain"
+                    />
+                    
+                    {/* Navigation Arrows */}
+                    <button
+                      onClick={prevSlide}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                    >
+                      <ChevronLeft className="w-6 h-6 text-white" />
+                    </button>
+                    <button
+                      onClick={nextSlide}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                    >
+                      <ChevronRight className="w-6 h-6 text-white" />
+                    </button>
+
+                    {/* Slide Counter */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/50 rounded-full text-white text-sm">
+                      {carouselIndex + 1} / {selectedItem.carouselImages.length}
+                    </div>
+                  </div>
+
+                  {/* Thumbnail Navigation */}
+                  <div className="flex gap-2 mt-4 justify-center overflow-x-auto pb-2">
+                    {selectedItem.carouselImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCarouselIndex(idx)}
+                        className={`flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                          idx === carouselIndex 
+                            ? 'border-primary ring-2 ring-primary/30' 
+                            : 'border-transparent hover:border-primary/50'
+                        }`}
+                      >
+                        <img 
+                          src={img.src} 
+                          alt={img.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <div className="flex gap-3">
                 <Button className="flex-1">

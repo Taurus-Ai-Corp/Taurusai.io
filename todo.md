@@ -76,3 +76,12 @@
 - [x] Implement checkout flow
 - [x] Add webhook handling
 - [x] Create payment success page
+
+## Carousel & Visual Enhancements
+- [x] Extract carousel images from zip files
+- [ ] Extract content from PPTX presentations
+- [x] Add AssetGrid "A" logo to product section
+- [x] Integrate carousel images into ecosystem planet modals
+- [x] Add Notion calendar booking for consultations
+- [x] Enhance website with agentic workflow infographics
+- [x] Add tech-centered animations and visuals

@@ -43,6 +43,7 @@ const productData: Record<string, { image: string; screenshot: string; link: str
     screenshot: "/images/8go3y1FWhxQYIxaEf7tkg.png",
     link: "https://assetgrid.taurusai.io",
     color: "from-success to-cyan",
+    logo: "/images/assetgrid-logo.png",
   },
   neovibe: {
     image: "/images/neovibe.png",

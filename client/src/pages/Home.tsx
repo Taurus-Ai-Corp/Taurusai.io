@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EcosystemOrbit from "@/components/EcosystemOrbit";
+import ConsultationBooking from "@/components/ConsultationBooking";
+import AgenticWorkflow from "@/components/AgenticWorkflow";
 import {
   ArrowRight,
   Shield,
@@ -285,8 +287,14 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Agentic Workflow Section */}
+      <AgenticWorkflow />
+
       {/* Ecosystem Orbit Section */}
       <EcosystemOrbit />
+
+      {/* Consultation Booking Section */}
+      <ConsultationBooking />
 
       {/* Technology Showcase */}
       <section className="py-24 relative overflow-hidden">
