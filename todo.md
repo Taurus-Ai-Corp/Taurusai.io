@@ -85,3 +85,9 @@
 - [x] Add Notion calendar booking for consultations
 - [x] Enhance website with agentic workflow infographics
 - [x] Add tech-centered animations and visuals
+
+## Google Calendar Integration
+- [x] Explore Google Calendar MCP tools
+- [x] Create server-side calendar event creation
+- [x] Update consultation booking to create calendar invites
+- [x] Add calendar invite confirmation to booking success

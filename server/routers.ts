@@ -6,6 +6,7 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import * as db from "./db";
 import { notifyOwner } from "./_core/notification";
 import { isStripeConfigured, getOrCreateCustomer, createCheckoutSession, createCustomerPortalSession } from "./stripe/stripe";
+import { createCalendarEvent, formatConsultationEvent } from "./calendar/googleCalendar";
 import { subscriptionTiers, formatPrice } from "./stripe/products";
 
 export const appRouter = router({
@@ -208,6 +209,80 @@ export const appRouter = router({
         });
         
         return { success: true, leadId };
+      }),
+    
+    // Consultation booking with calendar integration
+    bookConsultation: publicProcedure
+      .input(z.object({
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+        email: z.string().email(),
+        company: z.string().min(1),
+        consultationType: z.enum(["discovery", "demo", "technical", "enterprise"]),
+        date: z.string(), // YYYY-MM-DD format
+        time: z.string(), // e.g., "09:00 AM"
+        message: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        // Create lead record
+        const leadId = await db.createLead({
+          firstName: input.firstName,
+          lastName: input.lastName,
+          email: input.email,
+          company: input.company,
+          message: `Consultation: ${input.consultationType} on ${input.date} at ${input.time}\n${input.message || ''}`,
+          leadType: "demo-request",
+          source: "consultation_booking",
+        });
+        
+        // Format and create calendar event
+        const calendarEvent = formatConsultationEvent(
+          input.consultationType,
+          input.date,
+          input.time,
+          `${input.firstName} ${input.lastName}`,
+          input.email,
+          input.company,
+          input.message
+        );
+        
+        const calendarResult = await createCalendarEvent(calendarEvent);
+        
+        // Get consultation type label for notification
+        const typeLabels: Record<string, string> = {
+          discovery: "Discovery Call (30 min)",
+          demo: "Product Demo (45 min)",
+          technical: "Technical Consultation (60 min)",
+          enterprise: "Enterprise Assessment (90 min)",
+        };
+        const typeLabel = typeLabels[input.consultationType] || "Consultation";
+        
+        // Notify owner
+        await notifyOwner({
+          title: `📅 New Consultation Booked: ${input.firstName} ${input.lastName}`,
+          content: `
+🗓️ Consultation Details:
+- Type: ${typeLabel}
+- Date: ${input.date}
+- Time: ${input.time} IST
+
+👤 Contact: ${input.firstName} ${input.lastName}
+🏢 Company: ${input.company}
+📧 Email: ${input.email}
+
+${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${calendarResult.success ? 'Event created successfully' : 'Failed to create event'}
+
+---
+📨 Notification sent to: taurus.ai@taas-ai.com, admin@taurusai.io
+          `.trim(),
+        });
+        
+        return { 
+          success: true, 
+          leadId,
+          calendarEventCreated: calendarResult.success,
+          calendarEventId: calendarResult.eventId,
+        };
       }),
   }),
 

@@ -33,10 +33,17 @@ export default function ConsultationBooking() {
     message: "",
   });
 
-  const submitLead = trpc.leads.submit.useMutation({
-    onSuccess: () => {
+  const [calendarCreated, setCalendarCreated] = useState(false);
+
+  const bookConsultation = trpc.leads.bookConsultation.useMutation({
+    onSuccess: (data) => {
       setIsSubmitted(true);
-      toast.success("Consultation booked successfully!");
+      setCalendarCreated(data.calendarEventCreated);
+      if (data.calendarEventCreated) {
+        toast.success("Consultation booked! Calendar invite sent.");
+      } else {
+        toast.success("Consultation booked! Our team will send you a calendar invite.");
+      }
     },
     onError: () => {
       toast.error("Failed to book consultation. Please try again.");
@@ -46,25 +53,19 @@ export default function ConsultationBooking() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const consultationDetails = `
-Consultation Type: ${consultationTypes.find(t => t.value === consultationType)?.label}
-Date: ${selectedDate}
-Time: ${selectedTime}
-Additional Notes: ${formData.message}
-    `.trim();
-
     const nameParts = formData.name.split(' ');
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
     
-    submitLead.mutate({
+    bookConsultation.mutate({
       firstName,
       lastName,
       email: formData.email,
       company: formData.company,
-      message: consultationDetails,
-      source: "consultation_booking",
-      leadType: "demo-request",
+      consultationType: consultationType as "discovery" | "demo" | "technical" | "enterprise",
+      date: selectedDate,
+      time: selectedTime,
+      message: formData.message || undefined,
     });
   };
 
@@ -100,8 +101,17 @@ Additional Notes: ${formData.message}
             </div>
             <h2 className="text-3xl font-bold text-foreground mb-4">Consultation Booked!</h2>
             <p className="text-muted-foreground mb-6">
-              Thank you for scheduling a consultation. Our team will send you a calendar invite and meeting details shortly.
+              {calendarCreated 
+                ? "Your consultation is confirmed! A calendar invite has been sent to your email with meeting details."
+                : "Thank you for scheduling a consultation. Our team will send you a calendar invite and meeting details shortly."
+              }
             </p>
+            {calendarCreated && (
+              <div className="flex items-center justify-center gap-2 text-success mb-4">
+                <CheckCircle2 className="w-5 h-5" />
+                <span className="text-sm font-medium">Calendar invite sent</span>
+              </div>
+            )}
             <div className="p-4 rounded-xl bg-card border border-border mb-6">
               <div className="flex items-center justify-center gap-4 text-sm">
                 <div className="flex items-center gap-2">
@@ -293,9 +303,9 @@ Additional Notes: ${formData.message}
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={!consultationType || !selectedDate || !selectedTime || submitLead.isPending}
+                  disabled={!consultationType || !selectedDate || !selectedTime || bookConsultation.isPending}
                 >
-                  {submitLead.isPending ? (
+                  {bookConsultation.isPending ? (
                     "Booking..."
                   ) : (
                     <>
