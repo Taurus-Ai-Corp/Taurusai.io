@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,36 @@ import {
   ChevronRight,
   Target,
   TrendingUp,
+  ExternalLink,
 } from "lucide-react";
+
+// Product data with images and external links
+const productData: Record<string, { image: string; screenshot: string; link: string; color: string }> = {
+  bizflow: {
+    image: "/images/TaurusAI.BizFlow™.png",
+    screenshot: "/images/cmgvdpkm.manus.space-BizFlowAI-AdvancedAutomationPlatform-fpscreenshot.png",
+    link: "https://cmgvdpkm.manus.space",
+    color: "from-cyan to-teal",
+  },
+  "q-grid": {
+    image: "/images/FuturisticCircuitBoardClose-Up.png",
+    screenshot: "/images/q-grid.net-q-gridnetapp-fpscreenshot.jpeg",
+    link: "https://q-grid.net",
+    color: "from-quantum to-cyan",
+  },
+  assetgrid: {
+    image: "/images/FinancialDataDisplay.png",
+    screenshot: "/images/8go3y1FWhxQYIxaEf7tkg.png",
+    link: "https://assetgrid.taurusai.io",
+    color: "from-success to-cyan",
+  },
+  neovibe: {
+    image: "/images/neovibe.png",
+    screenshot: "/images/GlitchedBrainArtwork.png",
+    link: "https://neovibe.taurusai.io",
+    color: "from-warning to-quantum",
+  },
+};
 
 const productIcons: Record<string, React.ReactNode> = {
   Workflow: <Workflow className="w-8 h-8" />,
@@ -27,30 +56,36 @@ const productIcons: Record<string, React.ReactNode> = {
   Sparkles: <Sparkles className="w-8 h-8" />,
 };
 
-const productColors: Record<string, string> = {
-  cobalt: "from-cobalt to-cobalt-light",
-  quantum: "from-quantum to-cobalt-light",
-  charcoal: "from-charcoal to-charcoal-light",
-  silver: "from-silver-dark to-silver",
-};
-
 export default function Products() {
   const params = useParams<{ slug?: string }>();
   const { data: products } = trpc.products.list.useQuery();
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string | null>(params.slug || null);
 
+  useEffect(() => {
+    if (params.slug) {
+      setSelectedProduct(params.slug);
+    }
+  }, [params.slug]);
+
   const activeProduct = products?.find((p) => p.slug === selectedProduct) || products?.[0];
+  const activeProductData = activeProduct ? productData[activeProduct.slug] : null;
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-muted to-background">
-        <div className="container">
+      <section className="pt-32 pb-16 relative overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10"
+          style={{ backgroundImage: "url('/images/FuturisticDataCenterCorridor.png')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
+        
+        <div className="container relative z-10">
           <div className="max-w-3xl">
-            <Badge variant="outline" className="mb-4">Product Suite</Badge>
+            <Badge variant="outline" className="mb-4 tech-badge">Product Suite</Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
               Quantum-Safe Enterprise Platform
             </h1>
@@ -63,38 +98,35 @@ export default function Products() {
       </section>
 
       {/* Product Selector */}
-      <section className="py-12 border-b border-border sticky top-16 lg:top-20 bg-background/95 backdrop-blur z-40">
+      <section className="py-8 border-b border-border sticky top-16 lg:top-20 bg-background/95 backdrop-blur z-40">
         <div className="container">
           <div className="flex flex-wrap gap-4">
-            {products?.map((product) => (
-              <button
-                key={product.id}
-                onClick={() => setSelectedProduct(product.slug)}
-                onMouseEnter={() => setHoveredProduct(product.slug)}
-                onMouseLeave={() => setHoveredProduct(null)}
-                className={`flex items-center gap-3 px-6 py-4 rounded-xl border-2 transition-all duration-300 ${
-                  selectedProduct === product.slug || (selectedProduct === null && products[0].slug === product.slug)
-                    ? "border-primary bg-primary/5 shadow-lg"
-                    : hoveredProduct === product.slug
-                    ? "border-primary/50 bg-muted"
-                    : "border-border bg-card hover:border-primary/30"
-                }`}
-              >
-                <div
-                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+            {products?.map((product) => {
+              const pData = productData[product.slug];
+              return (
+                <button
+                  key={product.id}
+                  onClick={() => setSelectedProduct(product.slug)}
+                  onMouseEnter={() => setHoveredProduct(product.slug)}
+                  onMouseLeave={() => setHoveredProduct(null)}
+                  className={`flex items-center gap-3 px-6 py-4 rounded-xl border-2 transition-all duration-300 ${
                     selectedProduct === product.slug || (selectedProduct === null && products[0].slug === product.slug)
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-primary/10 text-primary"
+                      ? "border-primary bg-primary/10 shadow-lg glow-cyan"
+                      : hoveredProduct === product.slug
+                      ? "border-primary/50 bg-card"
+                      : "border-border bg-card hover:border-primary/30"
                   }`}
                 >
-                  {productIcons[product.icon]}
-                </div>
-                <div className="text-left">
-                  <div className="font-semibold text-foreground">{product.name}</div>
-                  <div className="text-xs text-muted-foreground">{product.tagline}</div>
-                </div>
-              </button>
-            ))}
+                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${pData?.color || 'from-primary to-cyan'} flex items-center justify-center text-white`}>
+                    {productIcons[product.icon || "Workflow"]}
+                  </div>
+                  <div className="text-left">
+                    <div className="font-bold text-foreground">{product.name}</div>
+                    <div className="text-sm text-muted-foreground">{product.tagline}</div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -103,84 +135,96 @@ export default function Products() {
       {activeProduct && (
         <section className="py-16">
           <div className="container">
-            <div className="grid lg:grid-cols-2 gap-16">
-              {/* Left Column - Info */}
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              {/* Product Info */}
               <div>
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${productColors[activeProduct.color]} flex items-center justify-center text-white mb-6`}>
-                  {productIcons[activeProduct.icon]}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${activeProductData?.color || 'from-primary to-cyan'} flex items-center justify-center text-white`}>
+                    {productIcons[activeProduct.icon || "Workflow"]}
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-foreground">{activeProduct.name}</h2>
+                    <p className="text-primary">{activeProduct.tagline}</p>
+                  </div>
                 </div>
-                <h2 className="text-3xl font-bold text-foreground mb-4">{activeProduct.name}</h2>
+
                 <p className="text-lg text-muted-foreground mb-8">{activeProduct.description}</p>
 
-                <h3 className="text-xl font-semibold text-foreground mb-4">Key Features</h3>
-                <div className="space-y-3 mb-8">
-                  {(activeProduct.features as string[])?.map((feature, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-success shrink-0 mt-0.5" />
-                      <span className="text-muted-foreground">{feature}</span>
-                    </div>
-                  ))}
+                {/* Features */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-foreground mb-4">Key Features</h3>
+                  <div className="grid gap-3">
+                    {activeProduct.features?.map((feature, index) => (
+                      <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-card border border-border">
+                        <CheckCircle2 className="w-5 h-5 text-success mt-0.5" />
+                        <span className="text-foreground">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="flex gap-4">
+                {/* Use Cases */}
+                {activeProduct.useCases && activeProduct.useCases.length > 0 && (
+                  <div className="mb-8">
+                    <h3 className="text-xl font-bold text-foreground mb-4">Use Cases</h3>
+                    <div className="grid gap-3">
+                      {activeProduct.useCases.map((useCase, index) => (
+                        <div key={index} className="p-3 rounded-lg bg-card border border-border">
+                          <div className="font-semibold text-foreground">{useCase.title}</div>
+                          <div className="text-sm text-muted-foreground">{useCase.description}</div>
+                          {useCase.metric && <div className="text-xs text-primary mt-1">{useCase.metric}</div>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* CTAs */}
+                <div className="flex flex-wrap gap-4">
+                  {activeProductData?.link && (
+                    <a href={activeProductData.link} target="_blank" rel="noopener noreferrer">
+                      <Button size="lg" className="bg-primary hover:bg-primary/90 btn-glow">
+                        Visit Platform
+                        <ExternalLink className="ml-2 w-5 h-5" />
+                      </Button>
+                    </a>
+                  )}
                   <Link href="/demo">
-                    <Button size="lg">
+                    <Button size="lg" variant="outline" className="border-primary/50 text-foreground hover:bg-primary/10">
                       Request Demo
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </Link>
-                  <Link href="/contact">
-                    <Button size="lg" variant="outline">
-                      Contact Sales
+                      <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </Link>
                 </div>
               </div>
 
-              {/* Right Column - Use Cases & Impact */}
-              <div className="space-y-8">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Target className="w-5 h-5 text-primary" />
-                      Use Cases
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {(activeProduct.useCases as any[])?.map((useCase, i) => (
-                        <div key={i} className="flex justify-between items-start p-4 rounded-lg bg-muted">
-                          <div>
-                            <div className="font-medium text-foreground">{useCase.title}</div>
-                            <div className="text-sm text-muted-foreground">{useCase.description}</div>
-                          </div>
-                          <Badge variant="secondary" className="shrink-0 ml-4">
-                            {useCase.metric}
-                          </Badge>
+              {/* Product Screenshot */}
+              <div className="relative">
+                <div className="rounded-2xl overflow-hidden border border-border shadow-2xl">
+                  <img 
+                    src={activeProductData?.screenshot || activeProductData?.image} 
+                    alt={activeProduct.name}
+                    className="w-full h-auto"
+                  />
+                </div>
+                
+                {/* Financial Impact Card */}
+                {activeProduct.financialImpact && activeProduct.financialImpact.length > 0 && (
+                  <div className="absolute -bottom-6 -left-6 bg-card p-4 rounded-xl border border-border shadow-xl max-w-xs">
+                    <div className="flex items-center gap-3 mb-2">
+                      <TrendingUp className="w-6 h-6 text-success" />
+                      <span className="font-semibold text-foreground">Financial Impact</span>
+                    </div>
+                    <div className="space-y-1">
+                      {activeProduct.financialImpact.map((impact, idx) => (
+                        <div key={idx} className="text-sm">
+                          <span className="text-muted-foreground">{impact.label}: </span>
+                          <span className="text-foreground font-medium">{impact.value}</span>
                         </div>
                       ))}
                     </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-primary" />
-                      Financial Impact
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 gap-4">
-                      {(activeProduct.financialImpact as any[])?.map((impact, i) => (
-                        <div key={i} className="flex justify-between items-center p-4 rounded-lg border border-border">
-                          <span className="text-muted-foreground">{impact.label}</span>
-                          <span className="font-bold text-foreground">{impact.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -188,25 +232,28 @@ export default function Products() {
       )}
 
       {/* Comparison Table */}
-      <section className="py-24 bg-muted">
+      <section className="py-16 bg-card">
         <div className="container">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">Product Comparison</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Compare Our Solutions
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Find the right combination of products for your enterprise needs.
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4 tech-badge">Comparison</Badge>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Platform Comparison</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              See how our products compare across key enterprise requirements
             </p>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full bg-card rounded-xl shadow-lg overflow-hidden">
+            <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-primary text-primary-foreground">
-                  <th className="p-4 text-left font-semibold">Feature</th>
+                <tr className="border-b border-border">
+                  <th className="text-left p-4 text-foreground font-semibold">Feature</th>
                   {products?.map((product) => (
-                    <th key={product.id} className="p-4 text-center font-semibold">
+                    <th 
+                      key={product.id} 
+                      className={`text-center p-4 text-foreground font-semibold ${
+                        selectedProduct === product.slug ? 'bg-primary/10' : ''
+                      }`}
+                    >
                       {product.name}
                     </th>
                   ))}
@@ -214,54 +261,39 @@ export default function Products() {
               </thead>
               <tbody>
                 <tr className="border-b border-border">
-                  <td className="p-4 font-medium text-foreground">Quantum-Safe Security</td>
-                  {products?.map((product) => (
-                    <td key={product.id} className="p-4 text-center">
-                      <CheckCircle2 className="w-5 h-5 text-success mx-auto" />
-                    </td>
-                  ))}
-                </tr>
-                <tr className="border-b border-border bg-muted/50">
-                  <td className="p-4 font-medium text-foreground">Workflow Automation</td>
-                  <td className="p-4 text-center"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
+                  <td className="p-4 text-muted-foreground">Quantum-Resistant</td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
                 </tr>
                 <tr className="border-b border-border">
-                  <td className="p-4 font-medium text-foreground">Advanced Analytics</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="p-4 text-center"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                </tr>
-                <tr className="border-b border-border bg-muted/50">
-                  <td className="p-4 font-medium text-foreground">Asset Management</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
+                  <td className="p-4 text-muted-foreground">AI-Powered</td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-muted-foreground mx-auto opacity-30" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
                 </tr>
                 <tr className="border-b border-border">
-                  <td className="p-4 font-medium text-foreground">User Experience Layer</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="p-4 text-muted-foreground">Blockchain Integration</td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-muted-foreground mx-auto opacity-30" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-muted-foreground mx-auto opacity-30" /></td>
                 </tr>
-                <tr className="border-b border-border bg-muted/50">
-                  <td className="p-4 font-medium text-foreground">Offline Capability</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
-                  <td className="p-4 text-center"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                <tr className="border-b border-border">
+                  <td className="p-4 text-muted-foreground">Real-time Analytics</td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
                 </tr>
-                <tr>
-                  <td className="p-4 font-medium text-foreground">WCAG 2.1 AAA</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center text-muted-foreground">-</td>
-                  <td className="p-4 text-center"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                <tr className="border-b border-border">
+                  <td className="p-4 text-muted-foreground">Enterprise SSO</td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
+                  <td className="text-center p-4"><CheckCircle2 className="w-5 h-5 text-success mx-auto" /></td>
                 </tr>
               </tbody>
             </table>
@@ -269,16 +301,22 @@ export default function Products() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 bg-primary">
-        <div className="container">
+      {/* CTA Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-20"
+          style={{ backgroundImage: "url('/images/MinimalistControlPanels.png')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-quantum/90" />
+        
+        <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Ready to Transform Your Infrastructure?
+              Ready to Transform Your Enterprise?
             </h2>
             <p className="text-xl text-white/80 mb-10">
-              Let our experts help you choose the right combination of products 
-              for your enterprise needs.
+              Get a personalized demo of our quantum-safe platform and see how 
+              Taurus AI can accelerate your digital transformation.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/demo">

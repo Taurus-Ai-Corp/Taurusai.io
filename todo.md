@@ -40,3 +40,13 @@
 - [x] Position widget in bottom-right corner
 - [x] Add chat message history and input
 - [x] Integrate widget globally across all pages
+
+
+## Design & Asset Integration
+- [x] Update to dark futuristic theme with cyan/teal accents
+- [x] Integrate Taurus AI logo across site
+- [x] Add product images (BizFlow, Q-Grid, AssetGrid, Neovibe)
+- [x] Add futuristic background images to sections
+- [x] Update product cards with platform screenshots
+- [x] Add external platform links to products
+- [x] Integrate Notion MCP data for platform details

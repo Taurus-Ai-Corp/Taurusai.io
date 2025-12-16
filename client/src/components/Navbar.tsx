@@ -19,10 +19,10 @@ const navItems = [
 ];
 
 const productItems = [
-  { label: "BizFlow™", href: "/products/bizflow", description: "Workflow Automation" },
-  { label: "Q-Grid™", href: "/products/q-grid", description: "Query & Intelligence" },
-  { label: "AssetGrid™", href: "/products/assetgrid", description: "Asset Management" },
-  { label: "Neovibe™", href: "/products/neovibe", description: "Experience Layer" },
+  { label: "BizFlow™", href: "/products/bizflow", description: "AI Workflow Automation", external: "https://cmgvdpkm.manus.space" },
+  { label: "Q-Grid™", href: "/products/q-grid", description: "Quantum-Resistant Security", external: "https://q-grid.net" },
+  { label: "AssetGrid™", href: "/products/assetgrid", description: "RWA Tokenization", external: "https://assetgrid.taurusai.io" },
+  { label: "Neovibe™", href: "/products/neovibe", description: "Creative AI Platform", external: "https://neovibe.taurusai.io" },
 ];
 
 export default function Navbar() {
@@ -54,10 +54,12 @@ export default function Navbar() {
       <div className="container">
         <nav className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-xl">T</span>
-            </div>
+          <Link href="/" className="flex items-center gap-3">
+            <img 
+              src="/images/Logo.naked.png" 
+              alt="Taurus AI" 
+              className="h-10 w-auto"
+            />
             <span className="font-bold text-xl text-foreground">Taurus AI</span>
           </Link>
 
