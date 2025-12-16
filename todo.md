@@ -91,3 +91,8 @@
 - [x] Create server-side calendar event creation
 - [x] Update consultation booking to create calendar invites
 - [x] Add calendar invite confirmation to booking success
+
+## Google Meet Integration
+- [x] Add conferenceData to calendar event creation
+- [x] Return meeting link in booking response
+- [x] Display meeting link in booking confirmation

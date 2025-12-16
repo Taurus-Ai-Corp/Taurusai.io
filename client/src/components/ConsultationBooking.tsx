@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Clock, User, Mail, Building, MessageSquare, CheckCircle2, ArrowRight } from "lucide-react";
+import { Calendar, Clock, User, Mail, Building, MessageSquare, CheckCircle2, ArrowRight, Video, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,13 +34,17 @@ export default function ConsultationBooking() {
   });
 
   const [calendarCreated, setCalendarCreated] = useState(false);
+  const [meetLink, setMeetLink] = useState<string | null>(null);
 
   const bookConsultation = trpc.leads.bookConsultation.useMutation({
     onSuccess: (data) => {
       setIsSubmitted(true);
       setCalendarCreated(data.calendarEventCreated);
+      if (data.meetLink) {
+        setMeetLink(data.meetLink);
+      }
       if (data.calendarEventCreated) {
-        toast.success("Consultation booked! Calendar invite sent.");
+        toast.success("Consultation booked! Calendar invite with Google Meet link sent.");
       } else {
         toast.success("Consultation booked! Our team will send you a calendar invite.");
       }
@@ -113,7 +117,7 @@ export default function ConsultationBooking() {
               </div>
             )}
             <div className="p-4 rounded-xl bg-card border border-border mb-6">
-              <div className="flex items-center justify-center gap-4 text-sm">
+              <div className="flex items-center justify-center gap-4 text-sm mb-4">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-primary" />
                   <span>{selectedDate}</span>
@@ -123,10 +127,37 @@ export default function ConsultationBooking() {
                   <span>{selectedTime}</span>
                 </div>
               </div>
+              {meetLink && (
+                <div className="pt-4 border-t border-border">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Video className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium">Google Meet Link</span>
+                  </div>
+                  <a
+                    href={meetLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 rounded-lg text-primary text-sm font-medium transition-colors"
+                  >
+                    <span className="truncate max-w-[200px]">{meetLink}</span>
+                    <ExternalLink className="w-4 h-4 flex-shrink-0" />
+                  </a>
+                </div>
+              )}
             </div>
-            <Button onClick={() => setIsSubmitted(false)} variant="outline">
-              Book Another Consultation
-            </Button>
+            <div className="flex gap-3 justify-center">
+              {meetLink && (
+                <Button asChild>
+                  <a href={meetLink} target="_blank" rel="noopener noreferrer">
+                    <Video className="w-4 h-4 mr-2" />
+                    Join Meeting
+                  </a>
+                </Button>
+              )}
+              <Button onClick={() => setIsSubmitted(false)} variant="outline">
+                Book Another Consultation
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>

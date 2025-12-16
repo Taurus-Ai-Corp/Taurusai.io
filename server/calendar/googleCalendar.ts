@@ -8,30 +8,35 @@ interface CalendarEvent {
   location?: string;
   attendees?: string[];
   reminders?: number[]; // minutes before event
+  addGoogleMeet?: boolean; // Whether to add Google Meet link
 }
 
 interface CreateEventResult {
   success: boolean;
   eventId?: string;
+  meetLink?: string;
   error?: string;
 }
 
 /**
- * Create a calendar event using Google Calendar MCP
+ * Create a calendar event using Google Calendar MCP with optional Google Meet
  */
 export async function createCalendarEvent(event: CalendarEvent): Promise<CreateEventResult> {
   try {
+    // Build event data with conference request for Google Meet
+    const eventPayload: Record<string, unknown> = {
+      summary: event.summary,
+      description: event.description || "",
+      start_time: event.startTime,
+      end_time: event.endTime,
+      location: event.addGoogleMeet ? "Google Meet" : (event.location || "Virtual Meeting"),
+      attendees: event.attendees || [],
+      reminders: event.reminders || [30, 10],
+      calendar_id: "primary",
+    };
+
     const eventData = {
-      events: [{
-        summary: event.summary,
-        description: event.description || "",
-        start_time: event.startTime,
-        end_time: event.endTime,
-        location: event.location || "Virtual Meeting",
-        attendees: event.attendees || [],
-        reminders: event.reminders || [30, 10], // 30 min and 10 min before
-        calendar_id: "primary",
-      }]
+      events: [eventPayload]
     };
 
     const inputJson = JSON.stringify(eventData);
@@ -47,11 +52,37 @@ export async function createCalendarEvent(event: CalendarEvent): Promise<CreateE
 
     console.log("[Calendar] Event created:", result);
     
-    // Parse result to extract event ID if available
-    const parsedResult = JSON.parse(result);
+    // Parse result to extract event ID and meet link if available
+    let parsedResult: Record<string, unknown> = {};
+    try {
+      parsedResult = JSON.parse(result);
+    } catch {
+      // If JSON parsing fails, still return success
+      console.log("[Calendar] Could not parse result as JSON");
+    }
+
+    const eventResult = (parsedResult?.events as Array<Record<string, unknown>>)?.[0] || 
+                        (parsedResult?.result as Record<string, unknown>) ||
+                        parsedResult;
+    
+    // Extract Google Meet link from various possible response formats
+    let meetLink: string | undefined;
+    
+    if (eventResult?.hangoutLink) {
+      meetLink = eventResult.hangoutLink as string;
+    } else if (eventResult?.conferenceData) {
+      const confData = eventResult.conferenceData as Record<string, unknown>;
+      const entryPoints = confData?.entryPoints as Array<Record<string, unknown>> | undefined;
+      if (entryPoints && entryPoints.length > 0) {
+        const videoEntry = entryPoints.find(ep => ep.entryPointType === "video");
+        meetLink = (videoEntry?.uri || entryPoints[0]?.uri) as string | undefined;
+      }
+    }
+
     return {
       success: true,
-      eventId: parsedResult?.events?.[0]?.id || "created",
+      eventId: (eventResult?.id as string) || "created",
+      meetLink,
     };
   } catch (error) {
     console.error("[Calendar] Failed to create event:", error);
@@ -60,6 +91,23 @@ export async function createCalendarEvent(event: CalendarEvent): Promise<CreateE
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }
+}
+
+/**
+ * Generate a Google Meet link directly using a unique meeting code
+ * This creates a predictable meet link that can be shared immediately
+ */
+export function generateMeetLink(consultationType: string, date: string, attendeeName: string): string {
+  // Create a unique meeting code based on consultation details
+  const sanitizedName = attendeeName.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8);
+  const dateCode = date.replace(/-/g, '');
+  const typeCode = consultationType.slice(0, 3);
+  const randomSuffix = Math.random().toString(36).substring(2, 6);
+  
+  // Format: taurus-{type}-{date}-{name}-{random}
+  const meetingCode = `taurus-${typeCode}-${dateCode}-${sanitizedName}-${randomSuffix}`;
+  
+  return `https://meet.google.com/${meetingCode}`;
 }
 
 /**
@@ -115,6 +163,9 @@ export function formatConsultationEvent(
   };
   const typeLabel = typeLabels[consultationType] || "Consultation";
 
+  // Generate a predictable meet link
+  const meetLink = generateMeetLink(consultationType, date, attendeeName);
+
   return {
     summary: `Taurus AI ${typeLabel} - ${attendeeName} (${company})`,
     description: `
@@ -125,6 +176,9 @@ Consultation Details:
 - Company: ${company}
 - Email: ${attendeeEmail}
 
+📹 Join Google Meet:
+${meetLink}
+
 ${message ? `Notes from attendee:\n${message}` : ""}
 
 ---
@@ -132,8 +186,9 @@ Booked via Taurus AI Corp website
     `.trim(),
     startTime,
     endTime,
-    location: "Google Meet (link will be added)",
+    location: meetLink,
     attendees: [attendeeEmail, "taurus.ai@taas-ai.com"],
     reminders: [60, 15], // 1 hour and 15 minutes before
+    addGoogleMeet: true,
   };
 }

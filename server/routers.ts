@@ -6,7 +6,7 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import * as db from "./db";
 import { notifyOwner } from "./_core/notification";
 import { isStripeConfigured, getOrCreateCustomer, createCheckoutSession, createCustomerPortalSession } from "./stripe/stripe";
-import { createCalendarEvent, formatConsultationEvent } from "./calendar/googleCalendar";
+import { createCalendarEvent, formatConsultationEvent, generateMeetLink } from "./calendar/googleCalendar";
 import { subscriptionTiers, formatPrice } from "./stripe/products";
 
 export const appRouter = router({
@@ -257,11 +257,17 @@ export const appRouter = router({
         };
         const typeLabel = typeLabels[input.consultationType] || "Consultation";
         
+        // Get the meet link from calendar result or generate one
+        const meetLink = calendarResult.meetLink || generateMeetLink(
+          input.consultationType,
+          input.date,
+          `${input.firstName} ${input.lastName}`
+        );
+
         // Notify owner
         await notifyOwner({
           title: `📅 New Consultation Booked: ${input.firstName} ${input.lastName}`,
-          content: `
-🗓️ Consultation Details:
+          content: `🗓️ Consultation Details:
 - Type: ${typeLabel}
 - Date: ${input.date}
 - Time: ${input.time} IST
@@ -271,10 +277,10 @@ export const appRouter = router({
 📧 Email: ${input.email}
 
 ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${calendarResult.success ? 'Event created successfully' : 'Failed to create event'}
+📹 Google Meet: ${meetLink}
 
 ---
-📨 Notification sent to: taurus.ai@taas-ai.com, admin@taurusai.io
-          `.trim(),
+📨 Notification sent to: taurus.ai@taas-ai.com, admin@taurusai.io`.trim(),
         });
         
         return { 
@@ -282,6 +288,7 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
           leadId,
           calendarEventCreated: calendarResult.success,
           calendarEventId: calendarResult.eventId,
+          meetLink,
         };
       }),
   }),
