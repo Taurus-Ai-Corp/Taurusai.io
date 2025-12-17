@@ -1,5 +1,6 @@
 import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -8,6 +9,7 @@ import { notifyOwner } from "./_core/notification";
 import { isStripeConfigured, getOrCreateCustomer, createCheckoutSession, createCustomerPortalSession } from "./stripe/stripe";
 import { createCalendarEvent, formatConsultationEvent, generateMeetLink } from "./calendar/googleCalendar";
 import { subscriptionTiers, formatPrice } from "./stripe/products";
+import { sendEmail, formatConsultationConfirmationEmail } from "./email/gmail";
 
 export const appRouter = router({
   system: systemRouter,
@@ -248,6 +250,28 @@ export const appRouter = router({
         
         const calendarResult = await createCalendarEvent(calendarEvent);
         
+        // Get the meet link from calendar result or generate one
+        const meetLink = calendarResult.meetLink || generateMeetLink(
+          input.consultationType,
+          input.date,
+          `${input.firstName} ${input.lastName}`
+        );
+        
+        // Save consultation to database
+        const consultationId = await db.createConsultation({
+          firstName: input.firstName,
+          lastName: input.lastName,
+          email: input.email,
+          company: input.company,
+          consultationType: input.consultationType,
+          date: input.date,
+          time: input.time,
+          message: input.message,
+          status: "scheduled",
+          calendarEventId: calendarResult.eventId,
+          meetLink,
+        });
+        
         // Get consultation type label for notification
         const typeLabels: Record<string, string> = {
           discovery: "Discovery Call (30 min)",
@@ -257,13 +281,23 @@ export const appRouter = router({
         };
         const typeLabel = typeLabels[input.consultationType] || "Consultation";
         
-        // Get the meet link from calendar result or generate one
-        const meetLink = calendarResult.meetLink || generateMeetLink(
+        // Send confirmation email to attendee
+        const emailContent = formatConsultationConfirmationEmail(
+          input.firstName,
+          input.lastName,
           input.consultationType,
           input.date,
-          `${input.firstName} ${input.lastName}`
+          input.time,
+          meetLink,
+          input.company
         );
-
+        
+        const emailResult = await sendEmail({
+          to: input.email,
+          subject: emailContent.subject,
+          body: emailContent.body,
+        });
+        
         // Notify owner
         await notifyOwner({
           title: `📅 New Consultation Booked: ${input.firstName} ${input.lastName}`,
@@ -290,6 +324,62 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
           calendarEventId: calendarResult.eventId,
           meetLink,
         };
+      }),
+  }),
+
+  // Consultation Management Router
+  consultations: router({
+    getAll: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== 'admin') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
+      }
+      return db.getAllConsultations();
+    }),
+    
+    getUpcoming: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== 'admin') {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
+      }
+      return db.getUpcomingConsultations();
+    }),
+    
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
+        }
+        return db.getConsultationById(input.id);
+      }),
+    
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        date: z.string().optional(),
+        time: z.string().optional(),
+        status: z.enum(["scheduled", "completed", "cancelled", "rescheduled"]).optional(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
+        }
+        const { id, ...updates } = input;
+        await db.updateConsultation(id, updates);
+        return { success: true };
+      }),
+    
+    cancel: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
+        }
+        await db.cancelConsultation(input.id, input.notes);
+        return { success: true };
       }),
   }),
 

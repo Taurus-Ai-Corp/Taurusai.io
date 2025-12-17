@@ -9,7 +9,8 @@ import {
   downloadableAssets, DownloadableAsset, InsertDownloadableAsset,
   leads, Lead, InsertLead,
   pressReleases, PressRelease, InsertPressRelease,
-  testimonials, Testimonial, InsertTestimonial
+  testimonials, Testimonial, InsertTestimonial,
+  consultations, Consultation, InsertConsultation
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -375,4 +376,54 @@ export async function updateUserStripeCustomerId(userId: number, stripeCustomerI
   const db = await getDb();
   if (!db) return;
   await db.update(users).set({ stripeCustomerId }).where(eq(users.id, userId));
+}
+
+
+// ============ CONSULTATION FUNCTIONS ============
+export async function createConsultation(consultation: InsertConsultation): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(consultations).values(consultation);
+  return Number(result[0].insertId);
+}
+
+export async function getAllConsultations(): Promise<Consultation[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(consultations).orderBy(desc(consultations.createdAt));
+}
+
+export async function getUpcomingConsultations(): Promise<Consultation[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(consultations)
+    .where(eq(consultations.status, "scheduled"))
+    .orderBy(consultations.date, consultations.time);
+}
+
+export async function getConsultationById(id: number): Promise<Consultation | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(consultations).where(eq(consultations.id, id)).limit(1);
+  return result[0];
+}
+
+export async function updateConsultation(id: number, updates: Partial<InsertConsultation>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  await db.update(consultations).set(updates).where(eq(consultations.id, id));
+}
+
+export async function cancelConsultation(id: number, notes?: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  await db.update(consultations)
+    .set({ status: "cancelled", notes })
+    .where(eq(consultations.id, id));
 }

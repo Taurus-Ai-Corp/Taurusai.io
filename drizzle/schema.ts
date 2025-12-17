@@ -204,3 +204,25 @@ export const testimonials = mysqlTable("testimonials", {
 
 export type Testimonial = typeof testimonials.$inferSelect;
 export type InsertTestimonial = typeof testimonials.$inferInsert;
+
+// Consultations table - for booking management
+export const consultations = mysqlTable("consultations", {
+  id: int("id").autoincrement().primaryKey(),
+  firstName: varchar("firstName", { length: 100 }).notNull(),
+  lastName: varchar("lastName", { length: 100 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  company: varchar("company", { length: 200 }).notNull(),
+  consultationType: mysqlEnum("consultationType", ["discovery", "demo", "technical", "enterprise"]).notNull(),
+  date: varchar("date", { length: 50 }).notNull(),
+  time: varchar("time", { length: 50 }).notNull(),
+  message: text("message"),
+  status: mysqlEnum("status", ["scheduled", "completed", "cancelled", "rescheduled"]).default("scheduled").notNull(),
+  calendarEventId: varchar("calendarEventId", { length: 500 }),
+  meetLink: varchar("meetLink", { length: 500 }),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Consultation = typeof consultations.$inferSelect;
+export type InsertConsultation = typeof consultations.$inferInsert;

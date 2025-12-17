@@ -96,3 +96,16 @@
 - [x] Add conferenceData to calendar event creation
 - [x] Return meeting link in booking response
 - [x] Display meeting link in booking confirmation
+
+## Booking Management Dashboard
+- [x] Create consultations table in database
+- [x] Add booking CRUD operations to db.ts
+- [x] Create admin booking management page
+- [x] Add reschedule and cancel functionality
+- [x] Display upcoming consultations list
+
+## Email Confirmation System
+- [x] Integrate Gmail MCP for sending emails
+- [x] Create email template for booking confirmation
+- [x] Send confirmation email to attendee after booking
+- [x] Include meeting details and Google Meet link in email
