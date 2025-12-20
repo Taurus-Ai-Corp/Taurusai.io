@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import VideoBackground from "@/components/VideoBackground";
 import { toast } from "sonner";
 import { Check, Zap, Shield, ArrowRight, Clock, Users } from "lucide-react";
 
@@ -48,7 +49,9 @@ export default function Pricing() {
       <Navbar />
       
       <section className="pt-32 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
+        {/* Logo Animation Background */}
+        <VideoBackground src="/logo-animation.mp4" opacity={0.15} overlay={false} />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
         <div className="container relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <Badge variant="outline" className="mb-4 tech-badge">

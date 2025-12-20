@@ -141,3 +141,13 @@
 - [x] Calculate and update lead scores automatically
 - [x] Add lead priority indicators in admin dashboard
 - [x] Sort leads by score in admin views
+
+
+## Video Background Animations
+- [x] Examine uploaded video files (36585144.mp4 and LOGOANIME.mp4)
+- [x] Copy video files to public directory with optimized names
+- [x] Add graphics animation background to relevant sections
+- [x] Add logo animation background to sections without images
+- [x] Ensure videos are muted, autoplay, and loop
+- [x] Optimize video playback performance
+- [x] Test responsive behavior on different screen sizes

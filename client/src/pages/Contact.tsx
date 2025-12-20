@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import VideoBackground from "@/components/VideoBackground";
 import { toast } from "sonner";
 import {
   Mail,
@@ -154,8 +155,11 @@ export default function Contact() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-muted to-background">
-        <div className="container">
+      <section className="pt-32 pb-16 bg-gradient-to-b from-muted to-background relative overflow-hidden">
+        {/* Graphics Animation Background */}
+        <VideoBackground src="/graphics-bg.mp4" opacity={0.15} overlay={false} />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
+        <div className="container relative z-10">
           <div className="max-w-3xl">
             <Badge variant="outline" className="mb-4">
               {isDemo ? "Request Demo" : "Contact Us"}

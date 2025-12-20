@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import EcosystemOrbit from "@/components/EcosystemOrbit";
 import ConsultationBooking from "@/components/ConsultationBooking";
 import AgenticWorkflow from "@/components/AgenticWorkflow";
+import VideoBackground from "@/components/VideoBackground";
 import {
   ArrowRight,
   Shield,
@@ -75,19 +76,13 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero Section with Background Image */}
+      {/* Hero Section with Video Background */}
       <section className="relative min-h-screen flex items-center hero-gradient overflow-hidden">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: "url('/images/FuturisticDataCenterCorridor.png')" }}
-        />
+        {/* Video Background */}
+        <VideoBackground src="/graphics-bg.mp4" opacity={0.25} />
         
         {/* Grid Overlay */}
-        <div className="absolute inset-0 grid-bg opacity-50" />
-        
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
+        <div className="absolute inset-0 grid-bg opacity-30" />
 
         {/* Animated Grid Lines */}
         <div className="absolute inset-0 overflow-hidden">
@@ -217,8 +212,11 @@ export default function Home() {
       </section>
 
       {/* Products Section */}
-      <section className="py-24 section-gradient">
-        <div className="container">
+      <section className="py-24 section-gradient relative overflow-hidden">
+        {/* Logo Animation Background */}
+        <VideoBackground src="/logo-animation.mp4" opacity={0.1} overlay={false} />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
+        <div className="container relative z-10">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 tech-badge">Our Platform</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -298,10 +296,8 @@ export default function Home() {
 
       {/* Technology Showcase */}
       <section className="py-24 relative overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-10"
-          style={{ backgroundImage: "url('/images/FuturisticCircuitBoardClose-Up.png')" }}
-        />
+        {/* Logo Animation Background */}
+        <VideoBackground src="/logo-animation.mp4" opacity={0.15} overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background" />
         
         <div className="container relative z-10">
@@ -409,8 +405,11 @@ export default function Home() {
 
       {/* Testimonials */}
       {testimonials && testimonials.length > 0 && (
-        <section className="py-24 section-gradient">
-          <div className="container">
+        <section className="py-24 section-gradient relative overflow-hidden">
+          {/* Graphics Animation Background */}
+          <VideoBackground src="/graphics-bg.mp4" opacity={0.12} overlay={false} />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
+          <div className="container relative z-10">
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4 tech-badge">Testimonials</Badge>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -447,10 +446,8 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="py-24 relative overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: "url('/images/ModernControlPanel.png')" }}
-        />
+        {/* Graphics Animation Background */}
+        <VideoBackground src="/graphics-bg.mp4" opacity={0.3} overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-quantum/90" />
         
         <div className="container relative z-10">
