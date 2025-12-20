@@ -29,6 +29,13 @@
       "when": 1766000037831,
       "tag": "0003_easy_natasha_romanoff",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1766230044191,
+      "tag": "0004_acoustic_harpoon",
+      "breakpoints": true
     }
   ]
 }

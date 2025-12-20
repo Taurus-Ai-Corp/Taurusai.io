@@ -388,11 +388,35 @@ export async function createConsultation(consultation: InsertConsultation): Prom
   return Number(result[0].insertId);
 }
 
-export async function getAllConsultations(): Promise<Consultation[]> {
+export async function getAllConsultations(): Promise<(Consultation & { leadScore?: number })[]> {
   const db = await getDb();
   if (!db) return [];
   
-  return db.select().from(consultations).orderBy(desc(consultations.createdAt));
+  // Join with leads table to get lead score
+  const results = await db
+    .select({
+      id: consultations.id,
+      firstName: consultations.firstName,
+      lastName: consultations.lastName,
+      email: consultations.email,
+      company: consultations.company,
+      consultationType: consultations.consultationType,
+      date: consultations.date,
+      time: consultations.time,
+      message: consultations.message,
+      status: consultations.status,
+      calendarEventId: consultations.calendarEventId,
+      meetLink: consultations.meetLink,
+      notes: consultations.notes,
+      createdAt: consultations.createdAt,
+      updatedAt: consultations.updatedAt,
+      leadScore: leads.score,
+    })
+    .from(consultations)
+    .leftJoin(leads, eq(consultations.email, leads.email))
+    .orderBy(desc(consultations.createdAt));
+  
+  return results as (Consultation & { leadScore?: number })[];
 }
 
 export async function getUpcomingConsultations(): Promise<Consultation[]> {
@@ -410,6 +434,15 @@ export async function getConsultationById(id: number): Promise<Consultation | un
   
   const result = await db.select().from(consultations).where(eq(consultations.id, id)).limit(1);
   return result[0];
+}
+
+export async function getConsultationsByDate(date: string): Promise<Consultation[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(consultations)
+    .where(eq(consultations.date, date))
+    .orderBy(consultations.time);
 }
 
 export async function updateConsultation(id: number, updates: Partial<InsertConsultation>): Promise<void> {

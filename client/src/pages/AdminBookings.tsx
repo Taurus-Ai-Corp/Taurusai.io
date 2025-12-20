@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar, Clock, User, Building, Mail, Video, Edit, X, CheckCircle2, XCircle, AlertCircle, BarChart3 } from "lucide-react";
+import { Calendar, Clock, User, Building, Mail, Video, Edit, X, CheckCircle2, XCircle, AlertCircle, BarChart3, Target } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -141,11 +141,27 @@ export default function AdminBookings() {
                 <Card key={consultation.id} className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 space-y-4">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-4 flex-wrap">
                         <div className={`px-3 py-1 rounded-full border flex items-center gap-2 ${getStatusColor(consultation.status)}`}>
                           {getStatusIcon(consultation.status)}
                           <span className="text-sm font-medium capitalize">{consultation.status}</span>
                         </div>
+                        {consultation.leadScore !== undefined && consultation.leadScore !== null && (
+                          <div className={`px-3 py-1 rounded-full border flex items-center gap-2 ${
+                            consultation.leadScore >= 80 ? 'bg-red-500/10 border-red-500/20 text-red-500' :
+                            consultation.leadScore >= 60 ? 'bg-orange-500/10 border-orange-500/20 text-orange-500' :
+                            consultation.leadScore >= 40 ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' :
+                            'bg-gray-500/10 border-gray-500/20 text-gray-500'
+                          }`}>
+                            <Target className="w-4 h-4" />
+                            <span className="text-sm font-medium">
+                              Score: {consultation.leadScore}/100 
+                              {consultation.leadScore >= 80 ? ' (Critical)' :
+                               consultation.leadScore >= 60 ? ' (High)' :
+                               consultation.leadScore >= 40 ? ' (Medium)' : ' (Low)'}
+                            </span>
+                          </div>
+                        )}
                         <span className="text-sm text-muted-foreground">
                           {new Date(consultation.createdAt).toLocaleDateString()}
                         </span>

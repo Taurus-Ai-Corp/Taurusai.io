@@ -1,0 +1,1 @@
+ALTER TABLE `leads` ADD `score` int DEFAULT 0 NOT NULL;

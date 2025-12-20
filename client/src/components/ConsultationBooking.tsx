@@ -30,6 +30,8 @@ export default function ConsultationBooking() {
     name: "",
     email: "",
     company: "",
+    companySize: "",
+    industry: "",
     message: "",
   });
 
@@ -66,6 +68,8 @@ export default function ConsultationBooking() {
       lastName,
       email: formData.email,
       company: formData.company,
+      companySize: formData.companySize || undefined,
+      industry: formData.industry || undefined,
       consultationType: consultationType as "discovery" | "demo" | "technical" | "enterprise",
       date: selectedDate,
       time: selectedTime,
@@ -315,6 +319,42 @@ export default function ConsultationBooking() {
                       required
                     />
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="companySize" className="text-foreground">Company Size (Optional)</Label>
+                  <Select value={formData.companySize} onValueChange={(value) => setFormData({ ...formData, companySize: value })}>
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder="Select company size" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1-10">1-10 employees</SelectItem>
+                      <SelectItem value="11-50">11-50 employees</SelectItem>
+                      <SelectItem value="51-200">51-200 employees</SelectItem>
+                      <SelectItem value="201-500">201-500 employees</SelectItem>
+                      <SelectItem value="501-1000">501-1000 employees</SelectItem>
+                      <SelectItem value="1000+">1000+ employees</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="industry" className="text-foreground">Industry (Optional)</Label>
+                  <Select value={formData.industry} onValueChange={(value) => setFormData({ ...formData, industry: value })}>
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder="Select industry" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Financial Services">Financial Services</SelectItem>
+                      <SelectItem value="Healthcare">Healthcare</SelectItem>
+                      <SelectItem value="Government">Government</SelectItem>
+                      <SelectItem value="Technology">Technology</SelectItem>
+                      <SelectItem value="Retail">Retail</SelectItem>
+                      <SelectItem value="Manufacturing">Manufacturing</SelectItem>
+                      <SelectItem value="Education">Education</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">

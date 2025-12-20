@@ -159,6 +159,7 @@ export const leads = mysqlTable("leads", {
   source: varchar("source", { length: 100 }),
   productsInterested: json("productsInterested").$type<string[]>(),
   status: mysqlEnum("status", ["new", "contacted", "qualified", "converted", "closed"]).default("new").notNull(),
+  score: int("score").default(0).notNull(),
   notes: text("notes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

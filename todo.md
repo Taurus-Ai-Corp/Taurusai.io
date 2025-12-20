@@ -120,3 +120,24 @@
 - [x] Add date range filtering for analytics
 - [x] Display key metrics cards
 - [x] Create consultation trends chart
+
+
+## Automated Reminder Emails
+- [x] Create reminder email template
+- [x] Add scheduled job to check upcoming consultations
+- [x] Send reminder emails 24 hours before consultations
+- [x] Track reminder email delivery status
+
+## Post-Consultation Survey System
+- [x] Create testimonials database table
+- [x] Build survey form component
+- [x] Create survey submission endpoint
+- [x] Send survey email after consultation completion
+- [x] Display collected testimonials on website
+
+## Lead Scoring System
+- [x] Add lead score field to database
+- [x] Create scoring algorithm based on company size, industry, consultation type
+- [x] Calculate and update lead scores automatically
+- [x] Add lead priority indicators in admin dashboard
+- [x] Sort leads by score in admin views

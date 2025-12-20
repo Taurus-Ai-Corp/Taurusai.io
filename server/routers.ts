@@ -10,6 +10,7 @@ import { isStripeConfigured, getOrCreateCustomer, createCheckoutSession, createC
 import { createCalendarEvent, formatConsultationEvent, generateMeetLink } from "./calendar/googleCalendar";
 import { subscriptionTiers, formatPrice } from "./stripe/products";
 import { sendEmail, formatConsultationConfirmationEmail } from "./email/gmail";
+import { calculateLeadScore, getLeadPriority, getRecommendedAction } from "./utils/leadScoring";
 
 export const appRouter = router({
   system: systemRouter,
@@ -160,6 +161,28 @@ export const appRouter = router({
     featured: publicProcedure.query(async () => {
       return db.getFeaturedTestimonials();
     }),
+    submit: publicProcedure
+      .input(z.object({
+        name: z.string(),
+        company: z.string(),
+        position: z.string(),
+        content: z.string(),
+        rating: z.number().min(1).max(5),
+        featured: z.boolean().default(false),
+        published: z.boolean().default(false),
+      }))
+      .mutation(async ({ input }) => {
+        await db.createTestimonial({
+          quote: input.content,
+          authorName: input.name,
+          authorTitle: input.position,
+          companyName: input.company,
+          rating: input.rating,
+          isFeatured: input.featured,
+          isPublished: input.published,
+        });
+        return { success: true };
+      }),
   }),
 
   // Leads Router
@@ -181,7 +204,14 @@ export const appRouter = router({
         productsInterested: z.array(z.string()).optional(),
       }))
       .mutation(async ({ input }) => {
-        const leadId = await db.createLead(input);
+        // Calculate lead score
+        const score = calculateLeadScore({
+          companySize: input.companySize,
+          industry: input.industry,
+          productsInterested: input.productsInterested,
+        });
+        
+        const leadId = await db.createLead({ ...input, score });
         
         // Build detailed notification content
         const leadTypeLabel = {
@@ -195,10 +225,17 @@ export const appRouter = router({
           ? `\n\n📦 Products Interested:\n${input.productsInterested.join(', ')}`
           : '';
         
+        // Get priority and recommended action
+        const priority = getLeadPriority(score);
+        const recommendedAction = getRecommendedAction(score);
+        
         const notificationContent = `
 👤 Contact: ${input.firstName} ${input.lastName}
 🏢 Company: ${input.company}${input.jobTitle ? ` (${input.jobTitle})` : ''}
 📧 Email: ${input.email}${input.phone ? `\n📞 Phone: ${input.phone}` : ''}${input.country ? `\n🌍 Location: ${input.country}` : ''}${input.companySize ? `\n👥 Company Size: ${input.companySize}` : ''}${input.industry ? `\n🏭 Industry: ${input.industry}` : ''}${productsText}${input.message ? `\n\n💬 Message:\n${input.message}` : ''}
+
+🎯 Lead Score: ${score}/100 (${priority} Priority)
+📋 Recommended Action: ${recommendedAction}
 
 ---
 📨 Notification sent to: taurus.ai@taas-ai.com, admin@taurusai.io
@@ -220,21 +257,41 @@ export const appRouter = router({
         lastName: z.string().min(1),
         email: z.string().email(),
         company: z.string().min(1),
+        companySize: z.string().optional(),
+        industry: z.string().optional(),
         consultationType: z.enum(["discovery", "demo", "technical", "enterprise"]),
         date: z.string(), // YYYY-MM-DD format
         time: z.string(), // e.g., "09:00 AM"
         message: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        // Create lead record
+        // Map consultation type to scoring format
+        const consultationTypeMap: Record<string, string> = {
+          "discovery": "General Inquiry",
+          "demo": "Product Demo",
+          "technical": "Technical Deep Dive",
+          "enterprise": "Enterprise Implementation",
+        };
+        
+        // Calculate lead score
+        const score = calculateLeadScore({
+          companySize: input.companySize,
+          industry: input.industry,
+          consultationType: consultationTypeMap[input.consultationType],
+        });
+        
+        // Create lead record with score
         const leadId = await db.createLead({
           firstName: input.firstName,
           lastName: input.lastName,
           email: input.email,
           company: input.company,
+          companySize: input.companySize,
+          industry: input.industry,
           message: `Consultation: ${input.consultationType} on ${input.date} at ${input.time}\n${input.message || ''}`,
           leadType: "demo-request",
           source: "consultation_booking",
+          score,
         });
         
         // Format and create calendar event
