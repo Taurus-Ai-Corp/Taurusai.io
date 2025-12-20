@@ -16,6 +16,7 @@ import Search from "./pages/Search";
 import Pricing from "./pages/Pricing";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import AdminBookings from "./pages/AdminBookings";
+import AdminAnalytics from "./pages/AdminAnalytics";
 import LiveChat from "./components/LiveChat";
 
 function Router() {
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/pricing" component={Pricing} />
       <Route path="/payment/success" component={PaymentSuccess} />
       <Route path="/admin/bookings" component={AdminBookings} />
+      <Route path="/admin/analytics" component={AdminAnalytics} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

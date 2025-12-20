@@ -381,6 +381,18 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
         await db.cancelConsultation(input.id, input.notes);
         return { success: true };
       }),
+    
+    analytics: protectedProcedure
+      .input(z.object({
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+      }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
+        }
+        return db.getConsultationAnalytics(input.startDate, input.endDate);
+      }),
   }),
 
   // Global Search Router

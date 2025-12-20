@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar, Clock, User, Building, Mail, Video, Edit, X, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { Calendar, Clock, User, Building, Mail, Video, Edit, X, CheckCircle2, XCircle, AlertCircle, BarChart3 } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -124,9 +124,15 @@ export default function AdminBookings() {
       
       <main className="flex-1 py-12">
         <div className="container">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2">Consultation Bookings</h1>
-            <p className="text-muted-foreground">Manage all consultation appointments</p>
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-foreground mb-2">Consultation Bookings</h1>
+              <p className="text-muted-foreground">Manage all consultation appointments</p>
+            </div>
+            <Button onClick={() => window.location.href = '/admin/analytics'} className="gap-2">
+              <BarChart3 className="w-4 h-4" />
+              View Analytics
+            </Button>
           </div>
 
           <div className="grid gap-6">

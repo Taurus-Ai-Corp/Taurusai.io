@@ -109,3 +109,14 @@
 - [x] Create email template for booking confirmation
 - [x] Send confirmation email to attendee after booking
 - [x] Include meeting details and Google Meet link in email
+
+
+## Analytics Dashboard
+- [x] Create analytics data aggregation functions in db.ts
+- [x] Calculate booking conversion rates
+- [x] Track consultation types distribution
+- [x] Calculate no-show rates and completion rates
+- [x] Build analytics dashboard UI with charts
+- [x] Add date range filtering for analytics
+- [x] Display key metrics cards
+- [x] Create consultation trends chart

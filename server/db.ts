@@ -427,3 +427,78 @@ export async function cancelConsultation(id: number, notes?: string): Promise<vo
     .set({ status: "cancelled", notes })
     .where(eq(consultations.id, id));
 }
+
+
+// ============ ANALYTICS FUNCTIONS ============
+export async function getConsultationAnalytics(startDate?: string, endDate?: string) {
+  const db = await getDb();
+  if (!db) return null;
+
+  // Get all consultations within date range
+  let query = db.select().from(consultations);
+  
+  if (startDate && endDate) {
+    query = query.where(
+      and(
+        sql`${consultations.date} >= ${startDate}`,
+        sql`${consultations.date} <= ${endDate}`
+      )
+    ) as any;
+  }
+  
+  const allConsultations = await query;
+  
+  // Get all leads for conversion rate calculation
+  const allLeads = await db.select().from(leads)
+    .where(eq(leads.leadType, "demo-request"));
+  
+  // Calculate metrics
+  const totalConsultations = allConsultations.length;
+  const totalLeads = allLeads.length;
+  
+  const statusCounts = {
+    scheduled: allConsultations.filter(c => c.status === "scheduled").length,
+    completed: allConsultations.filter(c => c.status === "completed").length,
+    cancelled: allConsultations.filter(c => c.status === "cancelled").length,
+    rescheduled: allConsultations.filter(c => c.status === "rescheduled").length,
+  };
+  
+  const typeCounts = {
+    discovery: allConsultations.filter(c => c.consultationType === "discovery").length,
+    demo: allConsultations.filter(c => c.consultationType === "demo").length,
+    technical: allConsultations.filter(c => c.consultationType === "technical").length,
+    enterprise: allConsultations.filter(c => c.consultationType === "enterprise").length,
+  };
+  
+  // Calculate rates
+  const conversionRate = totalLeads > 0 ? (totalConsultations / totalLeads) * 100 : 0;
+  const completionRate = totalConsultations > 0 ? (statusCounts.completed / totalConsultations) * 100 : 0;
+  const noShowRate = totalConsultations > 0 ? (statusCounts.cancelled / totalConsultations) * 100 : 0;
+  
+  // Group by date for trends
+  const consultationsByDate: Record<string, number> = {};
+  allConsultations.forEach(consultation => {
+    const date = consultation.date;
+    consultationsByDate[date] = (consultationsByDate[date] || 0) + 1;
+  });
+  
+  // Group by month for monthly trends
+  const consultationsByMonth: Record<string, number> = {};
+  allConsultations.forEach(consultation => {
+    const month = consultation.date.substring(0, 7); // YYYY-MM
+    consultationsByMonth[month] = (consultationsByMonth[month] || 0) + 1;
+  });
+  
+  return {
+    totalConsultations,
+    totalLeads,
+    conversionRate: Math.round(conversionRate * 10) / 10,
+    completionRate: Math.round(completionRate * 10) / 10,
+    noShowRate: Math.round(noShowRate * 10) / 10,
+    statusCounts,
+    typeCounts,
+    consultationsByDate,
+    consultationsByMonth,
+    recentConsultations: allConsultations.slice(0, 10),
+  };
+}
