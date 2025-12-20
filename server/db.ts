@@ -1,4 +1,4 @@
-import { eq, desc, and, like, or, sql } from "drizzle-orm";
+import { eq, desc, asc, and, like, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { 
   InsertUser, users, 
@@ -255,10 +255,55 @@ export async function createLead(lead: InsertLead): Promise<number> {
   return result[0].insertId;
 }
 
-export async function getAllLeads(): Promise<Lead[]> {
+interface LeadFilters {
+  status?: string;
+  industry?: string;
+  startDate?: string;
+  endDate?: string;
+  sortBy?: "score" | "createdAt" | "company";
+  sortOrder?: "asc" | "desc";
+}
+
+export async function getAllLeads(filters: LeadFilters = {}): Promise<Lead[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(leads).orderBy(desc(leads.createdAt));
+  
+  let query = db.select().from(leads);
+  
+  // Apply filters
+  const conditions = [];
+  
+  if (filters.status) {
+    conditions.push(eq(leads.status, filters.status as Lead["status"]));
+  }
+  
+  if (filters.industry) {
+    conditions.push(eq(leads.industry, filters.industry));
+  }
+  
+  if (filters.startDate) {
+    conditions.push(sql`${leads.createdAt} >= ${filters.startDate}`);
+  }
+  
+  if (filters.endDate) {
+    conditions.push(sql`${leads.createdAt} <= ${filters.endDate}`);
+  }
+  
+  if (conditions.length > 0) {
+    query = query.where(and(...conditions)) as typeof query;
+  }
+  
+  // Apply sorting
+  const sortBy = filters.sortBy || "score";
+  const sortOrder = filters.sortOrder || "desc";
+  
+  const sortColumn = sortBy === "score" ? leads.score : 
+                     sortBy === "company" ? leads.company : 
+                     leads.createdAt;
+  
+  query = query.orderBy(sortOrder === "desc" ? desc(sortColumn) : asc(sortColumn)) as typeof query;
+  
+  return query;
 }
 
 export async function updateLeadStatus(id: number, status: Lead["status"]): Promise<void> {

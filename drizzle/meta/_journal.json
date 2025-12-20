@@ -36,6 +36,13 @@
       "when": 1766230044191,
       "tag": "0004_acoustic_harpoon",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1766233877315,
+      "tag": "0005_tense_tigra",
+      "breakpoints": true
     }
   ]
 }

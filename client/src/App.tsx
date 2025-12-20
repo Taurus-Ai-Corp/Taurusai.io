@@ -17,6 +17,7 @@ import Pricing from "./pages/Pricing";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import AdminBookings from "./pages/AdminBookings";
 import AdminAnalytics from "./pages/AdminAnalytics";
+import AdminLeads from "./pages/AdminLeads";
 import Survey from "./pages/Survey";
 import LiveChat from "./components/LiveChat";
 
@@ -39,6 +40,7 @@ function Router() {
       <Route path="/payment/success" component={PaymentSuccess} />
       <Route path="/admin/bookings" component={AdminBookings} />
       <Route path="/admin/analytics" component={AdminAnalytics} />
+      <Route path="/admin/leads" component={AdminLeads} />
       <Route path="/survey" component={Survey} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

@@ -187,6 +187,22 @@ export const appRouter = router({
 
   // Leads Router
   leads: router({
+    getAll: protectedProcedure
+      .input(z.object({
+        status: z.string().optional(),
+        industry: z.string().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        sortBy: z.enum(["score", "createdAt", "company"]).default("score"),
+        sortOrder: z.enum(["asc", "desc"]).default("desc"),
+      }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
+        }
+        return db.getAllLeads(input);
+      }),
+    
     submit: publicProcedure
       .input(z.object({
         firstName: z.string().min(1),
@@ -262,6 +278,7 @@ export const appRouter = router({
         consultationType: z.enum(["discovery", "demo", "technical", "enterprise"]),
         date: z.string(), // YYYY-MM-DD format
         time: z.string(), // e.g., "09:00 AM"
+        timezone: z.string().default("America/New_York"),
         message: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
@@ -323,6 +340,7 @@ export const appRouter = router({
           consultationType: input.consultationType,
           date: input.date,
           time: input.time,
+          timezone: input.timezone,
           message: input.message,
           status: "scheduled",
           calendarEventId: calendarResult.eventId,
@@ -422,7 +440,44 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
           throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
         }
         const { id, ...updates } = input;
+        
+        // Get original consultation for comparison
+        const original = await db.getConsultationById(id);
+        if (!original) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Consultation not found' });
+        }
+        
+        // Update the consultation
         await db.updateConsultation(id, updates);
+        
+        // Send reschedule email if date or time changed
+        if ((input.date && input.date !== original.date) || (input.time && input.time !== original.time)) {
+          const { getRescheduleEmailTemplate } = await import('./utils/emailTemplates');
+          const { sendEmail } = await import('./email/gmail');
+          
+          const emailHtml = getRescheduleEmailTemplate({
+            firstName: original.firstName,
+            lastName: original.lastName,
+            consultationType: original.consultationType,
+            oldDate: original.date,
+            oldTime: original.time,
+            date: input.date || original.date,
+            time: input.time || original.time,
+            timezone: original.timezone,
+            meetLink: original.meetLink,
+          });
+          
+          try {
+            await sendEmail({
+              to: original.email,
+              subject: 'Consultation Rescheduled - Taurus AI',
+              body: emailHtml,
+            });
+          } catch (error) {
+            console.error('Failed to send reschedule email:', error);
+          }
+        }
+        
         return { success: true };
       }),
     
@@ -435,7 +490,40 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
         if (ctx.user.role !== 'admin') {
           throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
         }
+        
+        // Get consultation details before cancelling
+        const consultation = await db.getConsultationById(input.id);
+        if (!consultation) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Consultation not found' });
+        }
+        
+        // Cancel the consultation
         await db.cancelConsultation(input.id, input.notes);
+        
+        // Send cancellation email
+        const { getCancellationEmailTemplate } = await import('./utils/emailTemplates');
+        const { sendEmail } = await import('./email/gmail');
+        
+        const emailHtml = getCancellationEmailTemplate({
+          firstName: consultation.firstName,
+          lastName: consultation.lastName,
+          consultationType: consultation.consultationType,
+          date: consultation.date,
+          time: consultation.time,
+          timezone: consultation.timezone,
+          meetLink: consultation.meetLink,
+        });
+        
+        try {
+          await sendEmail({
+            to: consultation.email,
+            subject: 'Consultation Cancelled - Taurus AI',
+            body: emailHtml,
+          });
+        } catch (error) {
+          console.error('Failed to send cancellation email:', error);
+        }
+        
         return { success: true };
       }),
     

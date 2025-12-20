@@ -216,6 +216,7 @@ export const consultations = mysqlTable("consultations", {
   consultationType: mysqlEnum("consultationType", ["discovery", "demo", "technical", "enterprise"]).notNull(),
   date: varchar("date", { length: 50 }).notNull(),
   time: varchar("time", { length: 50 }).notNull(),
+  timezone: varchar("timezone", { length: 100 }).default("America/New_York").notNull(),
   message: text("message"),
   status: mysqlEnum("status", ["scheduled", "completed", "cancelled", "rescheduled"]).default("scheduled").notNull(),
   calendarEventId: varchar("calendarEventId", { length: 500 }),

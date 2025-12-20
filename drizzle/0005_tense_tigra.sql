@@ -1,0 +1,1 @@
+ALTER TABLE `consultations` ADD `timezone` varchar(100) DEFAULT 'America/New_York' NOT NULL;

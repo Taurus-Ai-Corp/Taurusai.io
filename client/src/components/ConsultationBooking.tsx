@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { TIMEZONES, getUserTimezone } from "@/lib/timezones";
 
 const timeSlots = [
   "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -24,6 +25,7 @@ const consultationTypes = [
 export default function ConsultationBooking() {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedTimezone, setSelectedTimezone] = useState<string>(getUserTimezone());
   const [consultationType, setConsultationType] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -73,6 +75,7 @@ export default function ConsultationBooking() {
       consultationType: consultationType as "discovery" | "demo" | "technical" | "enterprise",
       date: selectedDate,
       time: selectedTime,
+      timezone: selectedTimezone,
       message: formData.message || undefined,
     });
   };
@@ -252,7 +255,7 @@ export default function ConsultationBooking() {
 
               {/* Time Selection */}
               <div className="space-y-3">
-                <Label className="text-foreground">Select Time (IST)</Label>
+                <Label className="text-foreground">Select Time</Label>
                 <div className="grid grid-cols-3 gap-2">
                   {timeSlots.map((time) => (
                     <button
@@ -268,6 +271,29 @@ export default function ConsultationBooking() {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Timezone Selection */}
+              <div className="space-y-3">
+                <Label htmlFor="timezone" className="text-foreground flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  Your Timezone
+                </Label>
+                <Select value={selectedTimezone} onValueChange={setSelectedTimezone}>
+                  <SelectTrigger id="timezone" className="bg-card border-border">
+                    <SelectValue placeholder="Select timezone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIMEZONES.map((tz) => (
+                      <SelectItem key={tz.value} value={tz.value}>
+                        {tz.label} ({tz.offset})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Meeting time will be scheduled in your local timezone
+                </p>
               </div>
             </div>
 

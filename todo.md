@@ -151,3 +151,29 @@
 - [x] Ensure videos are muted, autoplay, and loop
 - [x] Optimize video playback performance
 - [x] Test responsive behavior on different screen sizes
+
+## Timezone Support for International Clients
+- [x] Add timezone selection dropdown to consultation booking form
+- [x] Store user's selected timezone in consultation record
+- [x] Convert meeting times to user's local timezone for display
+- [ ] Update email confirmations to show time in user's timezone
+- [x] Add timezone conversion utility functions
+
+## Email Templates for Booking Changes
+- [x] Create rescheduling email template
+- [x] Create cancellation email template
+- [x] Send reschedule notification when admin updates booking
+- [x] Send cancellation notification when booking is cancelled
+- [x] Include original and new meeting times in reschedule emails
+
+## Leads Dashboard
+- [x] Create /admin/leads route and page component
+- [x] Build leads data fetching with tRPC
+- [x] Display all leads in sortable table
+- [x] Add score-based sorting (highest to lowest)
+- [x] Implement status filter (new, contacted, qualified, converted, closed)
+- [x] Implement industry filter
+- [x] Add date range filter
+- [x] Show lead priority badges based on score
+- [x] Add export to CSV functionality
+- [x] Display lead statistics cards (total, high priority, qualified, converted)
