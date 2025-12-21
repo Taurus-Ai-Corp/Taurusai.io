@@ -237,3 +237,9 @@
 - [x] Implement automatic link detection for product names in messages
 - [x] Make product/page references clickable links to navigate within website
 - [x] Test link detection with various product mentions
+
+## LiveChat Window Controls
+- [x] Verify minimize button exists and works
+- [x] Verify close button exists and works
+- [x] Add maximize/restore button functionality
+- [x] Test all window control states

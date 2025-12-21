@@ -9,6 +9,7 @@ import {
   X,
   Send,
   Minimize2,
+  Maximize2,
   User,
   Bot,
   Sparkles,
@@ -98,6 +99,7 @@ const quickReplies = [
 export default function LiveChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -225,15 +227,23 @@ export default function LiveChat() {
 
       {/* Chat Window */}
       <div
-        className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ${
+        className={`fixed z-50 transition-all duration-300 ${
+          isMaximized
+            ? "inset-4"
+            : "bottom-6 right-6"
+        } ${
           isOpen
             ? "scale-100 opacity-100"
             : "scale-95 opacity-0 pointer-events-none"
         }`}
       >
-        <Card className={`w-[380px] shadow-2xl border-border overflow-hidden ${
-          isMinimized ? "h-[60px]" : "h-[520px]"
-        } transition-all duration-300`}>
+        <Card className={`shadow-2xl border-border overflow-hidden transition-all duration-300 ${
+          isMaximized
+            ? "w-full h-full"
+            : isMinimized
+            ? "w-[380px] h-[60px]"
+            : "w-[380px] h-[520px]"
+        }`}>
           {/* Header */}
           <CardHeader className="p-4 bg-primary text-white flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center gap-3">
@@ -254,6 +264,7 @@ export default function LiveChat() {
                 size="icon"
                 className="h-8 w-8 text-white hover:bg-white/20"
                 onClick={() => setIsMinimized(!isMinimized)}
+                title="Minimize"
               >
                 <Minimize2 className="w-4 h-4" />
               </Button>
@@ -261,7 +272,17 @@ export default function LiveChat() {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-white hover:bg-white/20"
+                onClick={() => setIsMaximized(!isMaximized)}
+                title={isMaximized ? "Restore" : "Maximize"}
+              >
+                <Maximize2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-white hover:bg-white/20"
                 onClick={() => setIsOpen(false)}
+                title="Close"
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -270,7 +291,9 @@ export default function LiveChat() {
 
           {/* Chat Content */}
           {!isMinimized && (
-            <CardContent className="p-0 flex flex-col h-[calc(520px-60px)]">
+            <CardContent className={`p-0 flex flex-col ${
+              isMaximized ? "h-[calc(100vh-8rem-60px)]" : "h-[calc(520px-60px)]"
+            }`}>
               {/* Messages */}
               <ScrollArea className="flex-1 p-4">
                 <div className="space-y-4">
