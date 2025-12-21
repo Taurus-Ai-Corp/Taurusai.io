@@ -168,6 +168,52 @@ export const leads = mysqlTable("leads", {
 export type Lead = typeof leads.$inferSelect;
 export type InsertLead = typeof leads.$inferInsert;
 
+// Email sequences for lead nurturing
+export const emailSequences = mysqlTable("emailSequences", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  description: text("description"),
+  targetScoreMin: int("targetScoreMin").default(0).notNull(),
+  targetScoreMax: int("targetScoreMax").default(100).notNull(),
+  targetStatus: mysqlEnum("targetStatus", ["new", "contacted", "qualified", "converted", "closed"]),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmailSequence = typeof emailSequences.$inferSelect;
+export type InsertEmailSequence = typeof emailSequences.$inferInsert;
+
+// Individual emails within sequences
+export const sequenceEmails = mysqlTable("sequenceEmails", {
+  id: int("id").autoincrement().primaryKey(),
+  sequenceId: int("sequenceId").notNull().references(() => emailSequences.id, { onDelete: "cascade" }),
+  stepNumber: int("stepNumber").notNull(),
+  delayDays: int("delayDays").notNull(),
+  subject: varchar("subject", { length: 500 }).notNull(),
+  body: text("body").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SequenceEmail = typeof sequenceEmails.$inferSelect;
+export type InsertSequenceEmail = typeof sequenceEmails.$inferInsert;
+
+// Log of emails sent to leads
+export const leadEmailLog = mysqlTable("leadEmailLog", {
+  id: int("id").autoincrement().primaryKey(),
+  leadId: int("leadId").notNull().references(() => leads.id, { onDelete: "cascade" }),
+  sequenceId: int("sequenceId").references(() => emailSequences.id, { onDelete: "set null" }),
+  sequenceEmailId: int("sequenceEmailId").references(() => sequenceEmails.id, { onDelete: "set null" }),
+  subject: varchar("subject", { length: 500 }).notNull(),
+  body: text("body").notNull(),
+  sentAt: timestamp("sentAt").defaultNow().notNull(),
+  status: mysqlEnum("status", ["sent", "failed", "bounced"]).default("sent").notNull(),
+  errorMessage: text("errorMessage"),
+});
+
+export type LeadEmailLog = typeof leadEmailLog.$inferSelect;
+export type InsertLeadEmailLog = typeof leadEmailLog.$inferInsert;
+
 // Press/News items
 export const pressReleases = mysqlTable("pressReleases", {
   id: int("id").autoincrement().primaryKey(),

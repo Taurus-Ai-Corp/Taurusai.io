@@ -10,6 +10,7 @@ import { serveStatic, setupVite } from "./vite";
 import stripeWebhook from "../stripe/webhook";
 import { startReminderScheduler } from "../scheduler/reminderScheduler";
 import { startSurveyScheduler } from "../scheduler/surveyScheduler";
+import { startEmailSequenceScheduler } from "../scheduler/emailSequenceScheduler";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -71,6 +72,7 @@ async function startServer() {
     // Start schedulers after server is running
     startReminderScheduler();
     startSurveyScheduler();
+    startEmailSequenceScheduler();
   });
 }
 

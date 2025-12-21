@@ -43,6 +43,13 @@
       "when": 1766233877315,
       "tag": "0005_tense_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1766312664644,
+      "tag": "0006_abnormal_tattoo",
+      "breakpoints": true
     }
   ]
 }

@@ -177,3 +177,16 @@
 - [x] Show lead priority badges based on score
 - [x] Add export to CSV functionality
 - [x] Display lead statistics cards (total, high priority, qualified, converted)
+## Automated Email Follow-up Sequences
+- [x] Create email sequence templates for high-priority leads (score >= 60)
+- [x] Create email sequence templates for medium-priority leads (score 40-59)
+- [x] Create email sequence templates for low-priority leads (score < 40)
+- [x] Add email_sequences table to database schema
+- [x] Add lead_email_log table to track sent emails
+- [x] Build email sequence scheduler (runs every hour)
+- [x] Implement sequence triggers based on lead score
+- [x] Implement sequence triggers based on lead status changes
+- [x] Add delay logic between sequence emails (Day 1, Day 3, Day 7, Day 14)
+- [ ] Track email opens and clicks (optional enhancement)
+- [ ] Add unsubscribe functionality
+- [x] Test email sequences with different lead scenarios
