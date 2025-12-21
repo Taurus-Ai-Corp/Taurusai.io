@@ -21,6 +21,7 @@ import AdminLeads from "./pages/AdminLeads";
 import AdminSequences from "./pages/AdminSequences";
 import Survey from "./pages/Survey";
 import LiveChat from "./components/LiveChat";
+import ScrollToTop from "./components/ScrollToTop";
 
 function Router() {
   return (
@@ -56,6 +57,7 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <ScrollToTop />
           <Router />
           <LiveChat />
         </TooltipProvider>

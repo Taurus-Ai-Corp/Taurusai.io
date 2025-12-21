@@ -243,3 +243,10 @@
 - [x] Verify close button exists and works
 - [x] Add maximize/restore button functionality
 - [x] Test all window control states
+
+## Scroll-to-Top Navigation Fix
+- [x] Implement scroll-to-top on route changes in App.tsx
+- [x] Test navigation from all pages (Home, Products, Pricing, Contact, etc.)
+- [x] Test navigation from footer links
+- [x] Test navigation from LiveChat auto-links
+- [x] Verify hash navigation (#bizflow, #agrismart) works correctly
