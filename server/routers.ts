@@ -612,6 +612,94 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
       return { portalUrl };
     }),
   }),
+
+  // Email Sequences Router
+  sequences: router({
+    getAll: protectedProcedure.query(async () => {
+      return db.getAllEmailSequences();
+    }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const sequence = await db.getEmailSequenceById(input.id);
+        if (!sequence) throw new Error('Sequence not found');
+        const emails = await db.getSequenceEmails(input.id);
+        return { ...sequence, emails };
+      }),
+
+    create: protectedProcedure
+      .input(z.object({
+        name: z.string(),
+        description: z.string(),
+        targetScoreMin: z.number().min(0).max(100),
+        targetScoreMax: z.number().min(0).max(100),
+        targetStatus: z.enum(['new', 'contacted', 'qualified', 'converted', 'closed']).nullable(),
+        isActive: z.boolean(),
+      }))
+      .mutation(async ({ input }) => {
+        const id = await db.createEmailSequence(input);
+        return { id };
+      }),
+
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().optional(),
+        description: z.string().optional(),
+        targetScoreMin: z.number().min(0).max(100).optional(),
+        targetScoreMax: z.number().min(0).max(100).optional(),
+        targetStatus: z.enum(['new', 'contacted', 'qualified', 'converted', 'closed']).nullable().optional(),
+        isActive: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...updates } = input;
+        await db.updateEmailSequence(id, updates);
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteEmailSequence(input.id);
+        return { success: true };
+      }),
+
+    // Sequence Email Management
+    createEmail: protectedProcedure
+      .input(z.object({
+        sequenceId: z.number(),
+        stepNumber: z.number(),
+        delayDays: z.number(),
+        subject: z.string(),
+        body: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const id = await db.createSequenceEmail(input);
+        return { id };
+      }),
+
+    updateEmail: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        stepNumber: z.number().optional(),
+        delayDays: z.number().optional(),
+        subject: z.string().optional(),
+        body: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...updates } = input;
+        await db.updateSequenceEmail(id, updates);
+        return { success: true };
+      }),
+
+    deleteEmail: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteSequenceEmail(input.id);
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

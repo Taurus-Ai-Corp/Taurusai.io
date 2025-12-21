@@ -10,7 +10,10 @@ import {
   leads, Lead, InsertLead,
   pressReleases, PressRelease, InsertPressRelease,
   testimonials, Testimonial, InsertTestimonial,
-  consultations, Consultation, InsertConsultation
+  consultations, Consultation, InsertConsultation,
+  emailSequences, EmailSequence, InsertEmailSequence,
+  sequenceEmails, SequenceEmail, InsertSequenceEmail,
+  leadEmailLog, LeadEmailLog, InsertLeadEmailLog
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -579,4 +582,72 @@ export async function getConsultationAnalytics(startDate?: string, endDate?: str
     consultationsByMonth,
     recentConsultations: allConsultations.slice(0, 10),
   };
+}
+
+// ============ EMAIL SEQUENCE FUNCTIONS ============
+export async function getAllEmailSequences(): Promise<EmailSequence[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(emailSequences).orderBy(desc(emailSequences.createdAt));
+}
+
+export async function getEmailSequenceById(id: number): Promise<EmailSequence | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(emailSequences).where(eq(emailSequences.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createEmailSequence(sequence: InsertEmailSequence): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(emailSequences).values(sequence);
+  return Number(result[0].insertId);
+}
+
+export async function updateEmailSequence(id: number, updates: Partial<InsertEmailSequence>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(emailSequences).set(updates).where(eq(emailSequences.id, id));
+}
+
+export async function deleteEmailSequence(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(emailSequences).where(eq(emailSequences.id, id));
+}
+
+export async function getSequenceEmails(sequenceId: number): Promise<SequenceEmail[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(sequenceEmails)
+    .where(eq(sequenceEmails.sequenceId, sequenceId))
+    .orderBy(sequenceEmails.stepNumber);
+}
+
+export async function createSequenceEmail(email: InsertSequenceEmail): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(sequenceEmails).values(email);
+  return Number(result[0].insertId);
+}
+
+export async function updateSequenceEmail(id: number, updates: Partial<InsertSequenceEmail>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(sequenceEmails).set(updates).where(eq(sequenceEmails.id, id));
+}
+
+export async function deleteSequenceEmail(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(sequenceEmails).where(eq(sequenceEmails.id, id));
+}
+
+export async function getLeadEmailHistory(leadId: number): Promise<LeadEmailLog[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(leadEmailLog)
+    .where(eq(leadEmailLog.leadId, leadId))
+    .orderBy(desc(leadEmailLog.sentAt));
 }

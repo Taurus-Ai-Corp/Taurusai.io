@@ -190,3 +190,16 @@
 - [ ] Track email opens and clicks (optional enhancement)
 - [ ] Add unsubscribe functionality
 - [x] Test email sequences with different lead scenarios
+
+## Email Sequence Management UI
+- [x] Create tRPC procedures for sequence CRUD operations
+- [x] Create tRPC procedures for sequence email CRUD operations
+- [x] Add /admin/sequences route and page component
+- [x] Build sequences list view with status indicators
+- [x] Add sequence preview functionality
+- [x] Create sequence editor form (name, description, score range, status)
+- [x] Build email step editor with rich text support
+- [ ] Add drag-and-drop reordering for email steps
+- [x] Implement activate/deactivate toggle for sequences
+- [x] Add email preview modal with template variable rendering
+- [x] Test sequence management workflows
