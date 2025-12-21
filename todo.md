@@ -231,3 +231,9 @@
 - [x] Build template library UI in admin sequences page
 - [x] Add template preview and clone functionality
 - [x] Implement template categories (welcome, announcement, re-engagement)
+
+## LiveChat Component Enhancements
+- [x] Add visible scrollbar styling to chat message area
+- [x] Implement automatic link detection for product names in messages
+- [x] Make product/page references clickable links to navigate within website
+- [x] Test link detection with various product mentions

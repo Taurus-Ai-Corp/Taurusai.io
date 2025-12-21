@@ -13,12 +13,70 @@ import {
   Bot,
   Sparkles,
 } from "lucide-react";
+import { Link } from "wouter";
 
 interface Message {
   id: string;
   content: string;
   sender: "user" | "agent";
   timestamp: Date;
+}
+
+// Product and page mappings for automatic link detection
+const linkMappings: Record<string, string> = {
+  "BizFlow AI": "/products#bizflow",
+  "AgriSmart AI": "/products#agrismart",
+  "EduSync AI": "/products#edusync",
+  "OrionGrid AI": "/products#oriongrid",
+  "ClinicFlow AI": "/products#clinicflow",
+  "products": "/products",
+  "pricing": "/pricing",
+  "contact": "/contact",
+  "case studies": "/case-studies",
+  "consultation": "/consultation",
+  "book a demo": "/consultation",
+  "schedule a call": "/consultation",
+};
+
+// Function to detect and linkify product/page mentions
+function renderMessageWithLinks(content: string): React.ReactNode {
+  let result: (string | React.ReactElement)[] = [content];
+  
+  // Sort by length (longest first) to match longer phrases before shorter ones
+  const sortedKeys = Object.keys(linkMappings).sort((a, b) => b.length - a.length);
+  
+  sortedKeys.forEach((keyword) => {
+    const newResult: (string | React.ReactElement)[] = [];
+    const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+    
+    result.forEach((part, index) => {
+      if (typeof part === 'string') {
+        const parts = part.split(regex);
+        const matches = part.match(regex) || [];
+        
+        parts.forEach((textPart, i) => {
+          if (textPart) newResult.push(textPart);
+          if (matches[i]) {
+            newResult.push(
+              <Link
+                key={`${keyword}-${index}-${i}`}
+                href={linkMappings[keyword]}
+                className="text-cyan-400 hover:text-cyan-300 underline font-medium"
+              >
+                {matches[i]}
+              </Link>
+            );
+          }
+        });
+      } else {
+        newResult.push(part);
+      }
+    });
+    
+    result = newResult;
+  });
+  
+  return result;
 }
 
 const initialMessages: Message[] = [
@@ -103,11 +161,11 @@ export default function LiveChat() {
   const getAgentResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
     
-    if (lowerMessage.includes("demo") || lowerMessage.includes("demonstration")) {
-      return "I'd be happy to arrange a demo for you! Please visit our demo request page at /demo or share your email and our team will reach out within 24 hours.";
+    if (lowerMessage.includes("demo") || lowerMessage.includes("demonstration") || lowerMessage.includes("consultation")) {
+      return "I'd be happy to arrange a consultation for you! You can book a demo or schedule a call with our team. Our experts will walk you through our quantum-safe solutions tailored to your industry.";
     }
     if (lowerMessage.includes("price") || lowerMessage.includes("pricing") || lowerMessage.includes("cost")) {
-      return "Our pricing is customized based on your organization's needs. For enterprise pricing, please contact our sales team at sales@taurus.ai or request a demo to discuss your requirements.";
+      return "Our pricing is customized based on your organization's needs. Visit our pricing page to see our plans, or book a demo to discuss enterprise solutions with our team.";
     }
     if (lowerMessage.includes("support") || lowerMessage.includes("help") || lowerMessage.includes("issue")) {
       return "For technical support, please email support@taurus.ai or call our 24/7 support line. For urgent issues, our enterprise clients have access to priority support channels.";
@@ -115,8 +173,8 @@ export default function LiveChat() {
     if (lowerMessage.includes("sales") || lowerMessage.includes("contact")) {
       return "I'll connect you with our sales team! You can reach them directly at sales@taurus.ai or call +91 123 456 7890. Would you like me to have someone reach out to you?";
     }
-    if (lowerMessage.includes("product") || lowerMessage.includes("bizflow") || lowerMessage.includes("q-grid")) {
-      return "We offer four main products: BizFlow™ for workflow automation, Q-Grid™ for quantum-safe security, AssetGrid™ for asset management, and Neovibe™ for analytics. Would you like more details on any specific product?";
+    if (lowerMessage.includes("product") || lowerMessage.includes("bizflow") || lowerMessage.includes("agrismart") || lowerMessage.includes("edusync")) {
+      return "We offer five main AI platforms: BizFlow AI for commerce automation, AgriSmart AI for precision farming, EduSync AI for educational technology, OrionGrid AI for financial analytics, and ClinicFlow AI for healthcare management. Check out our products page to learn more!";
     }
     
     return "Thank you for your message! A member of our team will respond shortly. In the meantime, feel free to explore our products at /products or request a demo at /demo.";
@@ -248,7 +306,7 @@ export default function LiveChat() {
                               : "bg-muted text-foreground rounded-bl-md"
                           }`}
                         >
-                          {message.content}
+                          {renderMessageWithLinks(message.content)}
                         </div>
                         <span className="text-xs text-muted-foreground mt-1 block">
                           {formatTime(message.timestamp)}
