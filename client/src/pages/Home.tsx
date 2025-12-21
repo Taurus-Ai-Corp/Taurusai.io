@@ -103,9 +103,9 @@ export default function Home() {
               </div>
 
               {/* Main Headline */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
-                Quantum-Safe Infrastructure{" "}
-                <span className="gradient-text">as a Service</span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                <span className="gradient-text-multi">Quantum-Safe Infrastructure</span>{" "}
+                <span className="text-gradient-cyan-purple">as a Service</span>
               </h1>
 
               {/* Subheadline */}
@@ -219,8 +219,8 @@ export default function Home() {
         <div className="container relative z-10">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 tech-badge">Our Platform</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Enterprise-Grade AI Solutions
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <span className="gradient-text-multi">Enterprise-Grade</span> <span className="text-gradient-cyan-purple">AI Solutions</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Four integrated platforms powering the future of enterprise technology
@@ -304,8 +304,8 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <Badge variant="outline" className="mb-4 tech-badge">Technology</Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Built for the Quantum Era
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                <span className="gradient-text-multi">Built for the</span> <span className="text-gradient-cyan-purple">Quantum Era</span>
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
                 Our infrastructure is designed from the ground up to be quantum-resistant, 
@@ -365,8 +365,8 @@ export default function Home() {
           <div className="container">
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4 tech-badge">Success Stories</Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Trusted by Industry Leaders
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="gradient-text-multi">Trusted by</span> <span className="text-gradient-cyan-purple">Industry Leaders</span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 See how enterprises are transforming with Taurus AI
@@ -412,8 +412,8 @@ export default function Home() {
           <div className="container relative z-10">
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4 tech-badge">Testimonials</Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                What Our Clients Say
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="gradient-text-multi">What Our</span> <span className="text-gradient-cyan-purple">Clients Say</span>
               </h2>
             </div>
 
@@ -452,8 +452,8 @@ export default function Home() {
         
         <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Ready to Future-Proof Your Enterprise?
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <span className="gradient-text-multi">Ready to Future-Proof</span> <span className="text-gradient-cyan-purple">Your Enterprise?</span>
             </h2>
             <p className="text-xl text-white/80 mb-10">
               Join industry leaders who are already preparing for the quantum era. 

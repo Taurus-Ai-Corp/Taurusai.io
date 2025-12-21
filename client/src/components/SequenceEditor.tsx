@@ -7,9 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Trash2, GripVertical, Eye } from "lucide-react";
+import { Plus, Trash2, GripVertical, Eye, BookTemplate } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import RichTextEditor from "@/components/RichTextEditor";
+import TemplateBrowser from "@/components/TemplateBrowser";
 
 interface SequenceEditorProps {
   sequenceId?: number | null;
@@ -23,6 +25,9 @@ interface EmailStep {
   delayDays: number;
   subject: string;
   body: string;
+  abTestEnabled?: boolean;
+  variantSubject?: string | null;
+  variantBody?: string | null;
 }
 
 export default function SequenceEditor({ sequenceId, onClose, onSave }: SequenceEditorProps) {
@@ -34,6 +39,7 @@ export default function SequenceEditor({ sequenceId, onClose, onSave }: Sequence
   const [isActive, setIsActive] = useState(true);
   const [emails, setEmails] = useState<EmailStep[]>([]);
   const [previewEmail, setPreviewEmail] = useState<EmailStep | null>(null);
+  const [showTemplateBrowser, setShowTemplateBrowser] = useState(false);
 
   const { data: existingSequence } = trpc.sequences.getById.useQuery(
     { id: sequenceId! },
@@ -137,6 +143,9 @@ export default function SequenceEditor({ sequenceId, onClose, onSave }: Sequence
             delayDays: email.delayDays,
             subject: email.subject,
             body: email.body,
+            abTestEnabled: email.abTestEnabled || false,
+            variantSubject: email.variantSubject || null,
+            variantBody: email.variantBody || null,
           });
         } else if (currentSequenceId) {
           await createEmail.mutateAsync({
@@ -145,6 +154,9 @@ export default function SequenceEditor({ sequenceId, onClose, onSave }: Sequence
             delayDays: email.delayDays,
             subject: email.subject,
             body: email.body,
+            abTestEnabled: email.abTestEnabled || false,
+            variantSubject: email.variantSubject || null,
+            variantBody: email.variantBody || null,
           });
         }
       }
@@ -254,10 +266,16 @@ export default function SequenceEditor({ sequenceId, onClose, onSave }: Sequence
       <div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Email Steps</h3>
-          <Button onClick={handleAddEmail} size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Email
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => setShowTemplateBrowser(true)} size="sm" variant="outline">
+              <BookTemplate className="w-4 h-4 mr-2" />
+              Browse Templates
+            </Button>
+            <Button onClick={handleAddEmail} size="sm">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Email
+            </Button>
+          </div>
         </div>
 
         {emails.length === 0 ? (
@@ -339,15 +357,49 @@ export default function SequenceEditor({ sequenceId, onClose, onSave }: Sequence
                     </div>
 
                     <div>
-                      <Label htmlFor={`body-${index}`}>Email Body (HTML)</Label>
-                      <Textarea
-                        id={`body-${index}`}
+                      <Label htmlFor={`body-${index}`}>Email Body</Label>
+                      <RichTextEditor
                         value={email.body}
-                        onChange={(e) => handleUpdateEmail(index, "body", e.target.value)}
-                        placeholder="Enter HTML email content..."
-                        rows={8}
-                        className="font-mono text-sm"
+                        onChange={(value) => handleUpdateEmail(index, "body", value)}
+                        placeholder="Enter email content..."
                       />
+                    </div>
+
+                    {/* A/B Testing */}
+                    <div className="border-t pt-4 mt-4">
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Switch
+                          id={`ab-test-${index}`}
+                          checked={email.abTestEnabled || false}
+                          onCheckedChange={(checked) => handleUpdateEmail(index, "abTestEnabled", checked)}
+                        />
+                        <Label htmlFor={`ab-test-${index}`} className="font-semibold">
+                          Enable A/B Testing (50/50 split)
+                        </Label>
+                      </div>
+
+                      {email.abTestEnabled && (
+                        <div className="space-y-4 pl-6 border-l-2 border-primary/30">
+                          <div>
+                            <Label htmlFor={`variant-subject-${index}`}>Variant B Subject Line</Label>
+                            <Input
+                              id={`variant-subject-${index}`}
+                              value={email.variantSubject || ""}
+                              onChange={(e) => handleUpdateEmail(index, "variantSubject", e.target.value)}
+                              placeholder="Alternative subject line..."
+                            />
+                          </div>
+
+                          <div>
+                            <Label htmlFor={`variant-body-${index}`}>Variant B Body</Label>
+                            <RichTextEditor
+                              value={email.variantBody || ""}
+                              onChange={(value) => handleUpdateEmail(index, "variantBody", value)}
+                              placeholder="Alternative email content..."
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -390,6 +442,25 @@ export default function SequenceEditor({ sequenceId, onClose, onSave }: Sequence
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Template Browser */}
+      <TemplateBrowser
+        open={showTemplateBrowser}
+        onClose={() => setShowTemplateBrowser(false)}
+        onSelect={(template) => {
+          handleAddEmail();
+          const newIndex = emails.length;
+          setEmails(prev => {
+            const updated = [...prev];
+            updated[newIndex] = {
+              ...updated[newIndex],
+              subject: template.subject,
+              body: template.body,
+            };
+            return updated;
+          });
+        }}
+      />
     </div>
   );
 }

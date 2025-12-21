@@ -673,6 +673,9 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
         delayDays: z.number(),
         subject: z.string(),
         body: z.string(),
+        abTestEnabled: z.boolean().optional(),
+        variantSubject: z.string().nullable().optional(),
+        variantBody: z.string().nullable().optional(),
       }))
       .mutation(async ({ input }) => {
         const id = await db.createSequenceEmail(input);
@@ -686,6 +689,9 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
         delayDays: z.number().optional(),
         subject: z.string().optional(),
         body: z.string().optional(),
+        abTestEnabled: z.boolean().optional(),
+        variantSubject: z.string().nullable().optional(),
+        variantBody: z.string().nullable().optional(),
       }))
       .mutation(async ({ input }) => {
         const { id, ...updates } = input;

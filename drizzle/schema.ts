@@ -192,6 +192,10 @@ export const sequenceEmails = mysqlTable("sequenceEmails", {
   delayDays: int("delayDays").notNull(),
   subject: varchar("subject", { length: 500 }).notNull(),
   body: text("body").notNull(),
+  // A/B testing fields
+  variantSubject: varchar("variantSubject", { length: 500 }),
+  variantBody: text("variantBody"),
+  abTestEnabled: boolean("abTestEnabled").default(false).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -206,6 +210,8 @@ export const leadEmailLog = mysqlTable("leadEmailLog", {
   sequenceEmailId: int("sequenceEmailId").references(() => sequenceEmails.id, { onDelete: "set null" }),
   subject: varchar("subject", { length: 500 }).notNull(),
   body: text("body").notNull(),
+  // A/B testing tracking
+  abTestVariant: mysqlEnum("abTestVariant", ["control", "variant"]),
   sentAt: timestamp("sentAt").defaultNow().notNull(),
   status: mysqlEnum("status", ["sent", "failed", "bounced"]).default("sent").notNull(),
   errorMessage: text("errorMessage"),

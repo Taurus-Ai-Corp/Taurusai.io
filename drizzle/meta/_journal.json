@@ -50,6 +50,13 @@
       "when": 1766312664644,
       "tag": "0006_abnormal_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1766327858718,
+      "tag": "0007_bright_lord_hawal",
+      "breakpoints": true
     }
   ]
 }

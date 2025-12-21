@@ -203,3 +203,31 @@
 - [x] Implement activate/deactivate toggle for sequences
 - [x] Add email preview modal with template variable rendering
 - [x] Test sequence management workflows
+
+## Typography and Styling Updates
+- [x] Add elegant italic serif font (similar to Playfair Display or Cormorant)
+- [x] Implement gradient text color variations across headings
+- [x] Update global CSS with new font family
+- [x] Apply gradient styling to hero sections and key headings
+- [ ] Test typography across all pages
+
+## Rich Text Editor Integration
+- [x] Install and configure TinyMCE or Quill editor
+- [x] Replace HTML textarea with rich text editor in SequenceEditor
+- [x] Add formatting toolbar (bold, italic, links, images)
+- [ ] Implement image upload functionality
+- [ ] Add template variable insertion buttons
+
+## A/B Testing for Email Campaigns
+- [x] Add A/B test variant fields to sequence email schema
+- [x] Create UI for adding subject/body variants
+- [x] Implement 50/50 split logic in email scheduler
+- [x] Track which variant was sent in leadEmailLog
+- [ ] Create A/B test results dashboard (optional)dashboard
+
+## Email Template Library
+- [x] Create email templates database table
+- [x] Design 5-7 pre-built HTML email templates
+- [x] Build template library UI in admin sequences page
+- [x] Add template preview and clone functionality
+- [x] Implement template categories (welcome, announcement, re-engagement)

@@ -24,6 +24,9 @@ interface LeadWithSequence {
   delayDays: number;
   subject: string;
   body: string;
+  abTestEnabled: boolean;
+  variantSubject: string | null;
+  variantBody: string | null;
 }
 
 /**
@@ -76,6 +79,9 @@ export async function processEmailSequences(): Promise<void> {
         delayDays: sequenceEmails.delayDays,
         subject: sequenceEmails.subject,
         body: sequenceEmails.body,
+        abTestEnabled: sequenceEmails.abTestEnabled,
+        variantSubject: sequenceEmails.variantSubject,
+        variantBody: sequenceEmails.variantBody,
       })
       .from(leads)
       .innerJoin(
@@ -156,12 +162,38 @@ export async function processEmailSequences(): Promise<void> {
         industry: lead.leadIndustry,
       });
 
+      // A/B Testing: randomly select variant (50/50 split)
+      let finalSubject = personalizedSubject;
+      let finalBody = personalizedBody;
+      let abTestVariant: "control" | "variant" | null = null;
+
+      if (lead.abTestEnabled && lead.variantSubject && lead.variantBody) {
+        const useVariant = Math.random() < 0.5;
+        if (useVariant) {
+          finalSubject = replaceTemplateVariables(lead.variantSubject, {
+            firstName: lead.leadFirstName,
+            lastName: lead.leadLastName,
+            company: lead.leadCompany,
+            industry: lead.leadIndustry,
+          });
+          finalBody = replaceTemplateVariables(lead.variantBody, {
+            firstName: lead.leadFirstName,
+            lastName: lead.leadLastName,
+            company: lead.leadCompany,
+            industry: lead.leadIndustry,
+          });
+          abTestVariant = "variant";
+        } else {
+          abTestVariant = "control";
+        }
+      }
+
       // Send email
       try {
         const result = await sendEmail({
           to: lead.leadEmail,
-          subject: personalizedSubject,
-          body: personalizedBody,
+          subject: finalSubject,
+          body: finalBody,
         });
 
         // Log the email
@@ -169,8 +201,9 @@ export async function processEmailSequences(): Promise<void> {
           leadId: lead.leadId,
           sequenceId: lead.sequenceId,
           sequenceEmailId: lead.sequenceEmailId,
-          subject: personalizedSubject,
-          body: personalizedBody,
+          subject: finalSubject,
+          body: finalBody,
+          abTestVariant,
           status: result.success ? "sent" : "failed",
           errorMessage: result.error || null,
         });
