@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import VideoBackground from "./VideoBackground";
 import { Linkedin, Twitter, Mail, MapPin, Phone } from "lucide-react";
 
 const footerLinks = {
@@ -30,9 +31,11 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-card border-t border-border text-foreground">
+    <footer className="bg-card border-t border-border text-foreground relative overflow-hidden">
+      {/* Subtle ending background animation */}
+      <VideoBackground src="/logo-animation.mp4" opacity={0.05} />
       {/* Main Footer */}
-      <div className="container py-16">
+      <div className="container py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-2">

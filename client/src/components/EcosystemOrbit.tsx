@@ -106,16 +106,6 @@ const orbitItems: OrbitItem[] = [
       { src: "/carousel/6_Ready-to-Reimagine-Your-Schools-Future.png", title: "Reimagine Future" },
     ],
   },
-  {
-    id: "healthcare",
-    title: "Healthcare",
-    subtitle: "Triage & EHR",
-    description: "Advanced AI integration for healthcare triage systems and electronic health records, improving patient outcomes and operational efficiency.",
-    icon: "🏥",
-    color: "from-red-500 to-rose-500",
-    angle: 315,
-    orbitRadius: 180,
-  },
 ];
 
 export default function EcosystemOrbit() {

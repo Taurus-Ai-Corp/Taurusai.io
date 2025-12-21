@@ -104,8 +104,8 @@ export default function Home() {
 
               {/* Main Headline */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-                <span className="gradient-text-multi">Quantum-Safe Infrastructure</span>{" "}
-                <span className="text-gradient-cyan-purple">as a Service</span>
+                <span className="gradient-text-multi">Orchestrated Agentic</span>{" "}
+                <span className="text-gradient-cyan-purple">Intelligence</span>
               </h1>
 
               {/* Subheadline */}
@@ -197,11 +197,11 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
             <div className="flex items-center gap-2">
               <Award className="w-6 h-6 text-warning" />
-              <span className="text-sm font-medium text-foreground">RBI Harbinger</span>
+              <span className="text-sm font-medium text-foreground">RBI Harbinger Hackathon Innovation</span>
             </div>
             <div className="flex items-center gap-2">
               <Shield className="w-6 h-6 text-primary" />
-              <span className="text-sm font-medium text-foreground">SWIFT 2027 Compliant</span>
+              <span className="text-sm font-medium text-foreground">SWIFT 2027 PQC Compliant</span>
             </div>
             <div className="flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-success" />
@@ -361,7 +361,8 @@ export default function Home() {
 
       {/* Case Studies Preview */}
       {caseStudies && caseStudies.length > 0 && (
-        <section className="py-24 bg-card">
+        <section className="py-24 bg-card relative overflow-hidden">
+          <VideoBackground src="/logo-animation.mp4" opacity={0.15} />
           <div className="container">
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4 tech-badge">Success Stories</Badge>

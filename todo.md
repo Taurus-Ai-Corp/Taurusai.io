@@ -250,3 +250,14 @@
 - [x] Test navigation from footer links
 - [x] Test navigation from LiveChat auto-links
 - [x] Verify hash navigation (#bizflow, #agrismart) works correctly
+
+## Visual Edits and Enhancements
+- [x] Make logo more visible in Navbar
+- [x] Update hero heading to "Orchestrated Agentic Intelligence"
+- [x] Update badge texts (RBI Harbinger Hackathon Innovation, SWIFT 2027 PQC Compliant)
+- [x] Change technology showcase icon to logo with B
+- [x] Add animated background to testimonials section
+- [x] Add animated background to CTA section
+- [x] Delete healthcare red box from EcosystemOrbit
+- [x] Add background animation to consultation booking
+- [x] Add nice ending background image to footer
