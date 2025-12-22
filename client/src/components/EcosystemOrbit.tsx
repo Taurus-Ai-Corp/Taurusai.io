@@ -8,39 +8,29 @@ interface CarouselImage {
   title: string;
 }
 
-interface OrbitItem {
+interface EcosystemNode {
   id: string;
   title: string;
   subtitle: string;
   description: string;
-  icon: string;
-  color: string;
-  link?: string;
-  angle: number;
-  orbitRadius: number;
+  position: { x: string; y: string }; // Percentage positions on image
   carouselImages?: CarouselImage[];
 }
 
-const orbitItems: OrbitItem[] = [
+const ecosystemNodes: EcosystemNode[] = [
   {
     id: "multilingual",
-    title: "Multilingual Local",
-    subtitle: "Integrations",
+    title: "Multilingual Local Integrations",
+    subtitle: "Global Deployment",
     description: "Seamless integration with local systems and multilingual support for global enterprise deployment across diverse markets and regulatory environments.",
-    icon: "🌐",
-    color: "from-cyan to-blue-500",
-    angle: 0,
-    orbitRadius: 220,
+    position: { x: "50%", y: "15%" },
   },
   {
     id: "backoffice",
-    title: "Back Office",
-    subtitle: "Task Automation",
+    title: "Back Office Task Automation",
+    subtitle: "Intelligent Automation",
     description: "Intelligent automation of back-office operations including document processing, data entry, reconciliation, and compliance workflows. Unlock efficiency and slash costs with intelligent automation.",
-    icon: "⚙️",
-    color: "from-purple-500 to-pink-500",
-    angle: 45,
-    orbitRadius: 220,
+    position: { x: "70%", y: "30%" },
     carouselImages: [
       { src: "/carousel/2_Unlock-efficiency-and-slash-costs-with-intelligent-automation.png", title: "Unlock Efficiency" },
       { src: "/carousel/3_Why-Automate-Your-Back-Office.png", title: "Why Automate" },
@@ -50,34 +40,39 @@ const orbitItems: OrbitItem[] = [
     ],
   },
   {
-    id: "finance",
-    title: "Finance",
-    subtitle: "Risk & Compliance",
-    description: "Advanced financial risk assessment, regulatory compliance automation, and real-time fraud detection powered by quantum-safe cryptography.",
-    icon: "💰",
-    color: "from-green-500 to-emerald-500",
-    angle: 90,
-    orbitRadius: 220,
+    id: "saas",
+    title: "AI Powered SaaS Modules",
+    subtitle: "Enterprise Solutions",
+    description: "Comprehensive suite of AI-powered SaaS modules designed for enterprise-grade deployment, scalability, and security.",
+    position: { x: "85%", y: "50%" },
+  },
+  {
+    id: "public-sector",
+    title: "Revolutionising Public-Sector Organisation Through AI",
+    subtitle: "Government Innovation",
+    description: "Transform public sector operations with AI-driven automation, citizen services optimization, and data-driven policy making.",
+    position: { x: "70%", y: "70%" },
   },
   {
     id: "agriculture",
-    title: "Agriculture",
-    subtitle: "Precision Farming",
+    title: "Precision Agriculture Optimisation",
+    subtitle: "Smart Farming",
     description: "AI-driven crop optimization, precision farming, and sustainable agriculture solutions leveraging IoT sensors and predictive analytics.",
-    icon: "🌾",
-    color: "from-yellow-500 to-orange-500",
-    angle: 135,
-    orbitRadius: 220,
+    position: { x: "50%", y: "85%" },
+  },
+  {
+    id: "retail",
+    title: "AI-Powered Digital & Retail Business Automation",
+    subtitle: "Commerce Innovation",
+    description: "End-to-end retail automation including inventory management, customer analytics, personalization, and omnichannel orchestration.",
+    position: { x: "30%", y: "70%" },
   },
   {
     id: "education",
-    title: "Education",
-    subtitle: "Integrated Management",
+    title: "An Integrated Educational Management System",
+    subtitle: "Smart Education",
     description: "Comprehensive educational management system integrating student information, learning analytics, and administrative workflows for modern institutions.",
-    icon: "🎓",
-    color: "from-blue-500 to-indigo-500",
-    angle: 180,
-    orbitRadius: 220,
+    position: { x: "15%", y: "50%" },
     carouselImages: [
       { src: "/carousel/1_Introducing-the-Integrated-Educational-Management-System.png", title: "IEMS Introduction" },
       { src: "/carousel/2_Transforming-Education-with-Smart-Technology.png", title: "Smart Technology" },
@@ -87,156 +82,178 @@ const orbitItems: OrbitItem[] = [
       { src: "/carousel/6_Ready-to-Reimagine-Your-Schools-Future.png", title: "Reimagine Future" },
     ],
   },
+  {
+    id: "healthcare",
+    title: "Advanced AI Integration in Healthcare Triage Systems & EHR",
+    subtitle: "Health Innovation",
+    description: "Advanced AI integration for healthcare triage systems and electronic health records, improving patient outcomes and operational efficiency.",
+    position: { x: "30%", y: "30%" },
+  },
 ];
 
 export default function EcosystemOrbit() {
-  const [selectedItem, setSelectedItem] = useState<OrbitItem | null>(null);
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [selectedNode, setSelectedNode] = useState<EcosystemNode | null>(null);
+  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
 
-  const handleItemClick = (item: OrbitItem) => {
-    setSelectedItem(item);
+  const handleNodeClick = (node: EcosystemNode) => {
+    setSelectedNode(node);
     setCarouselIndex(0);
   };
 
   const handleClose = () => {
-    setSelectedItem(null);
+    setSelectedNode(null);
     setCarouselIndex(0);
   };
 
   const nextSlide = () => {
-    if (selectedItem?.carouselImages) {
-      setCarouselIndex((prev) => (prev + 1) % (selectedItem.carouselImages?.length || 1));
+    if (selectedNode?.carouselImages) {
+      setCarouselIndex((prev) => (prev + 1) % (selectedNode.carouselImages?.length || 1));
     }
   };
 
   const prevSlide = () => {
-    if (selectedItem?.carouselImages) {
+    if (selectedNode?.carouselImages) {
       setCarouselIndex((prev) => 
-        prev === 0 ? (selectedItem.carouselImages?.length || 1) - 1 : prev - 1
+        prev === 0 ? (selectedNode.carouselImages?.length || 1) - 1 : prev - 1
       );
     }
   };
 
   return (
-    <div className="relative w-full h-[600px] flex items-center justify-center">
-      {/* Central Logo - Stationary */}
-      <div className="absolute inset-0 flex items-center justify-center z-10">
-        <div className="relative w-24 h-24">
-          <img 
-            src="/images/Logo.naked.png" 
-            alt="Taurus AI" 
-            className="w-full h-full object-contain"
-          />
-          {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-quantum/30 blur-xl animate-pulse" />
-        </div>
+    <div className="w-full py-24 relative overflow-hidden">
+      {/* Section Header */}
+      <div className="container text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <span className="gradient-text-multi">Evolution of AI Integration</span>{" "}
+            <span className="text-gradient-cyan-purple">& Orchestration</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Explore our comprehensive ecosystem of AI-powered solutions designed to transform every aspect of enterprise operations.
+          </p>
+        </motion.div>
       </div>
 
-      {/* Rotating Golden Orbital Lines */}
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-      >
-        {/* Inner orbit ring */}
-        <div className="absolute w-[300px] h-[300px] rounded-full border-2 border-warning/30" />
-        
-        {/* Middle orbit ring */}
-        <div className="absolute w-[440px] h-[440px] rounded-full border-2 border-warning/20" />
-        
-        {/* Outer orbit ring */}
-        <div className="absolute w-[580px] h-[580px] rounded-full border border-warning/10" />
-
-        {/* Golden supernova lines */}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-full origin-center"
-            style={{
-              transform: `rotate(${i * 45}deg)`,
-              background: `linear-gradient(to bottom, transparent 0%, rgba(251, 191, 36, 0.3) 45%, rgba(251, 191, 36, 0.1) 55%, transparent 100%)`,
+      {/* Interactive Ecosystem Image */}
+      <div className="container">
+        <motion.div
+          className="relative w-full aspect-square max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          {/* Animated Background Image */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              scale: [1, 1.05, 1],
             }}
-          />
-        ))}
-      </motion.div>
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <img
+              src="/ecosystem-visual.png"
+              alt="Taurus AI Ecosystem"
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
 
-      {/* Rotating Ecosystem Cubes */}
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-      >
-        {orbitItems.map((item, index) => {
-          const angle = (index / orbitItems.length) * 360;
-          const radian = (angle * Math.PI) / 180;
-          const x = Math.cos(radian) * item.orbitRadius;
-          const y = Math.sin(radian) * item.orbitRadius;
+          {/* Overlay gradient for better hotspot visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/20" />
 
-          return (
-            <motion.div
-              key={item.id}
-              className="absolute"
+          {/* Interactive Hotspots */}
+          {ecosystemNodes.map((node, index) => (
+            <motion.button
+              key={node.id}
+              className="absolute w-16 h-16 -translate-x-1/2 -translate-y-1/2 group"
               style={{
-                left: "50%",
-                top: "50%",
-                transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                left: node.position.x,
+                top: node.position.y,
               }}
-              animate={{ rotate: -360 }}
-              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.4 }}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleNodeClick(node)}
+              onMouseEnter={() => setHoveredNode(node.id)}
+              onMouseLeave={() => setHoveredNode(null)}
             >
-              <motion.button
-                whileHover={{ scale: 1.2, rotateY: 180 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handleItemClick(item)}
-                onMouseEnter={() => setHoveredItem(item.id)}
-                onMouseLeave={() => setHoveredItem(null)}
-                className={`
-                  relative w-20 h-20 rounded-lg
-                  bg-gradient-to-br ${item.color}
-                  shadow-lg hover:shadow-2xl
-                  transition-all duration-300
-                  flex items-center justify-center
-                  text-3xl
-                  cursor-pointer
-                  border-2 border-white/20
-                `}
-                style={{
-                  transformStyle: "preserve-3d",
-                  perspective: "1000px",
+              {/* Pulsing ring */}
+              <motion.div
+                className="absolute inset-0 rounded-full border-2 border-primary"
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.8, 0, 0.8],
                 }}
-              >
-                {/* Cube face */}
-                <span className="relative z-10">{item.icon}</span>
-                
-                {/* Glow effect */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-50 blur-md rounded-lg`} />
-                
-                {/* Label on hover */}
-                <AnimatePresence>
-                  {hoveredItem === item.id && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute -bottom-16 left-1/2 -translate-x-1/2 whitespace-nowrap"
-                    >
-                      <div className="bg-card/95 backdrop-blur-sm px-3 py-2 rounded-lg shadow-xl border border-border">
-                        <p className="text-sm font-bold text-foreground">{item.title}</p>
-                        <p className="text-xs text-muted-foreground">{item.subtitle}</p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            </motion.div>
-          );
-        })}
-      </motion.div>
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeOut",
+                }}
+              />
 
-      {/* Modal/Popup for Selected Item */}
+              {/* Hotspot dot */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-4 h-4 rounded-full bg-primary shadow-lg shadow-primary/50 group-hover:w-6 group-hover:h-6 transition-all duration-300" />
+              </div>
+
+              {/* Hover tooltip */}
+              <AnimatePresence>
+                {hoveredNode === node.id && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 whitespace-nowrap pointer-events-none z-10"
+                  >
+                    <div className="bg-card/95 backdrop-blur-sm px-4 py-2 rounded-lg shadow-xl border border-border">
+                      <p className="text-sm font-bold text-foreground">{node.title}</p>
+                      <p className="text-xs text-primary">{node.subtitle}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          ))}
+
+          {/* Floating particles effect */}
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-primary/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -20, 0],
+                opacity: [0.3, 0.8, 0.3],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Modal/Popup for Selected Node */}
       <AnimatePresence>
-        {selectedItem && (
+        {selectedNode && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -262,36 +279,31 @@ export default function EcosystemOrbit() {
               {/* Content */}
               <div className="p-8">
                 {/* Header */}
-                <div className="flex items-start gap-4 mb-6">
-                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${selectedItem.color} flex items-center justify-center text-3xl shadow-lg`}>
-                    {selectedItem.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-3xl font-bold text-foreground mb-2">
-                      {selectedItem.title}
-                    </h2>
-                    <p className="text-lg text-primary">{selectedItem.subtitle}</p>
-                  </div>
+                <div className="mb-6">
+                  <h2 className="text-3xl font-bold text-foreground mb-2">
+                    {selectedNode.title}
+                  </h2>
+                  <p className="text-lg text-primary">{selectedNode.subtitle}</p>
                 </div>
 
                 {/* Description */}
                 <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-                  {selectedItem.description}
+                  {selectedNode.description}
                 </p>
 
                 {/* Carousel (if available) */}
-                {selectedItem.carouselImages && selectedItem.carouselImages.length > 0 && (
+                {selectedNode.carouselImages && selectedNode.carouselImages.length > 0 && (
                   <div className="relative mb-6">
                     <div className="relative h-96 bg-background rounded-xl overflow-hidden">
                       <img
-                        src={selectedItem.carouselImages[carouselIndex].src}
-                        alt={selectedItem.carouselImages[carouselIndex].title}
+                        src={selectedNode.carouselImages[carouselIndex].src}
+                        alt={selectedNode.carouselImages[carouselIndex].title}
                         className="w-full h-full object-contain"
                       />
                     </div>
 
                     {/* Carousel controls */}
-                    {selectedItem.carouselImages.length > 1 && (
+                    {selectedNode.carouselImages.length > 1 && (
                       <>
                         <button
                           onClick={prevSlide}
@@ -308,7 +320,7 @@ export default function EcosystemOrbit() {
 
                         {/* Dots indicator */}
                         <div className="flex justify-center gap-2 mt-4">
-                          {selectedItem.carouselImages.map((_, index) => (
+                          {selectedNode.carouselImages.map((_, index) => (
                             <button
                               key={index}
                               onClick={() => setCarouselIndex(index)}
@@ -327,12 +339,10 @@ export default function EcosystemOrbit() {
 
                 {/* Action buttons */}
                 <div className="flex gap-4">
-                  {selectedItem.link && (
-                    <Button size="lg" className="gap-2">
-                      Learn More
-                      <ExternalLink className="w-4 h-4" />
-                    </Button>
-                  )}
+                  <Button size="lg" className="gap-2">
+                    Learn More
+                    <ExternalLink className="w-4 h-4" />
+                  </Button>
                   <Button size="lg" variant="outline" className="gap-2">
                     Schedule Demo
                     <ArrowRight className="w-4 h-4" />
