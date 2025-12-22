@@ -175,7 +175,7 @@ export default function ConsultationBooking() {
   return (
     <section className="py-24 bg-gradient-to-b from-card/50 to-background relative overflow-hidden">
       {/* Video Background */}
-      <VideoBackground src="/logo-animation.mp4" opacity={0.1} />
+      <VideoBackground src="/logo-animation.mp4" opacity={0.25} />
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{

@@ -157,7 +157,7 @@ export default function Contact() {
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-muted to-background relative overflow-hidden">
         {/* Graphics Animation Background */}
-        <VideoBackground src="/graphics-bg.mp4" opacity={0.15} overlay={false} />
+        <VideoBackground src="/graphics-bg.mp4" opacity={0.35} overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
         <div className="container relative z-10">
           <div className="max-w-3xl">

@@ -9,7 +9,7 @@ interface VideoBackgroundProps {
 
 export default function VideoBackground({ 
   src, 
-  opacity = 0.3, 
+  opacity = 0.5, 
   overlay = true,
   className = ""
 }: VideoBackgroundProps) {
@@ -38,7 +38,7 @@ export default function VideoBackground({
         <source src={src} type="video/mp4" />
       </video>
       {overlay && (
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background/60" />
       )}
     </>
   );

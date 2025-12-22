@@ -279,3 +279,14 @@
 - [x] Implement subtle zoom/pan animations on image
 - [x] Add interactive hotspots on ecosystem nodes
 - [x] Create hover effects for each ecosystem area
+
+## Ecosystem Enhancements
+- [x] Add click sound effect when opening modals
+- [x] Add whoosh sound effect for carousel transitions
+- [x] Implement localStorage progress tracking for explored nodes
+- [x] Add checkmark indicators to explored hotspots
+- [x] Change hotspot colors for explored vs unexplored nodes
+- [x] Increase brightness of background video animations
+- [x] Adjust video overlay opacity for better visibility
+- [x] Test sound effects across browsers
+- [x] Test progress tracking persistence

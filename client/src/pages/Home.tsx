@@ -79,7 +79,7 @@ export default function Home() {
       {/* Hero Section with Video Background */}
       <section className="relative min-h-screen flex items-center hero-gradient overflow-hidden">
         {/* Video Background */}
-        <VideoBackground src="/graphics-bg.mp4" opacity={0.25} />
+        <VideoBackground src="/graphics-bg.mp4" opacity={0.4} />
         
         {/* Grid Overlay */}
         <div className="absolute inset-0 grid-bg opacity-30" />
@@ -214,7 +214,7 @@ export default function Home() {
       {/* Products Section */}
       <section className="py-24 section-gradient relative overflow-hidden">
         {/* Logo Animation Background */}
-        <VideoBackground src="/logo-animation.mp4" opacity={0.1} overlay={false} />
+        <VideoBackground src="/logo-animation.mp4" opacity={0.25} overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
         <div className="container relative z-10">
           <div className="text-center mb-16">
@@ -297,7 +297,7 @@ export default function Home() {
       {/* Technology Showcase */}
       <section className="py-24 relative overflow-hidden">
         {/* Logo Animation Background */}
-        <VideoBackground src="/logo-animation.mp4" opacity={0.15} overlay={false} />
+        <VideoBackground src="/logo-animation.mp4" opacity={0.35} overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background" />
         
         <div className="container relative z-10">
@@ -362,7 +362,7 @@ export default function Home() {
       {/* Case Studies Preview */}
       {caseStudies && caseStudies.length > 0 && (
         <section className="py-24 bg-card relative overflow-hidden">
-          <VideoBackground src="/logo-animation.mp4" opacity={0.15} />
+          <VideoBackground src="/logo-animation.mp4" opacity={0.35} />
           <div className="container">
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4 tech-badge">Success Stories</Badge>
@@ -408,7 +408,7 @@ export default function Home() {
       {testimonials && testimonials.length > 0 && (
         <section className="py-24 section-gradient relative overflow-hidden">
           {/* Graphics Animation Background */}
-          <VideoBackground src="/graphics-bg.mp4" opacity={0.12} overlay={false} />
+          <VideoBackground src="/graphics-bg.mp4" opacity={0.5} overlay={false} />
           <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
           <div className="container relative z-10">
             <div className="text-center mb-16">
@@ -448,7 +448,7 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-24 relative overflow-hidden">
         {/* Graphics Animation Background */}
-        <VideoBackground src="/graphics-bg.mp4" opacity={0.3} overlay={false} />
+        <VideoBackground src="/graphics-bg.mp4" opacity={0.5} overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-quantum/90" />
         
         <div className="container relative z-10">

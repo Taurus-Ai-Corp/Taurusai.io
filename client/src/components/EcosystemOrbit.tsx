@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ExternalLink, ArrowRight, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSound } from "@/hooks/useSound";
 
 interface CarouselImage {
   src: string;
@@ -95,8 +96,28 @@ export default function EcosystemOrbit() {
   const [selectedNode, setSelectedNode] = useState<EcosystemNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [exploredNodes, setExploredNodes] = useState<Set<string>>(new Set());
+  const { playClick, playWhoosh } = useSound();
+
+  // Load explored nodes from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('taurus-explored-nodes');
+    if (saved) {
+      setExploredNodes(new Set(JSON.parse(saved)));
+    }
+  }, []);
+
+  // Save explored nodes to localStorage
+  const markAsExplored = (nodeId: string) => {
+    const newExplored = new Set(exploredNodes);
+    newExplored.add(nodeId);
+    setExploredNodes(newExplored);
+    localStorage.setItem('taurus-explored-nodes', JSON.stringify(Array.from(newExplored)));
+  };
 
   const handleNodeClick = (node: EcosystemNode) => {
+    playClick();
+    markAsExplored(node.id);
     setSelectedNode(node);
     setCarouselIndex(0);
   };
@@ -108,12 +129,14 @@ export default function EcosystemOrbit() {
 
   const nextSlide = () => {
     if (selectedNode?.carouselImages) {
+      playWhoosh();
       setCarouselIndex((prev) => (prev + 1) % (selectedNode.carouselImages?.length || 1));
     }
   };
 
   const prevSlide = () => {
     if (selectedNode?.carouselImages) {
+      playWhoosh();
       setCarouselIndex((prev) => 
         prev === 0 ? (selectedNode.carouselImages?.length || 1) - 1 : prev - 1
       );
@@ -192,7 +215,9 @@ export default function EcosystemOrbit() {
             >
               {/* Pulsing ring */}
               <motion.div
-                className="absolute inset-0 rounded-full border-2 border-primary"
+                className={`absolute inset-0 rounded-full border-2 ${
+                  exploredNodes.has(node.id) ? 'border-green-500' : 'border-primary'
+                }`}
                 animate={{
                   scale: [1, 1.5, 1],
                   opacity: [0.8, 0, 0.8],
@@ -206,7 +231,13 @@ export default function EcosystemOrbit() {
 
               {/* Hotspot dot */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-4 h-4 rounded-full bg-primary shadow-lg shadow-primary/50 group-hover:w-6 group-hover:h-6 transition-all duration-300" />
+                {exploredNodes.has(node.id) ? (
+                  <div className="w-6 h-6 rounded-full bg-green-500 shadow-lg shadow-green-500/50 flex items-center justify-center group-hover:w-8 group-hover:h-8 transition-all duration-300">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                ) : (
+                  <div className="w-4 h-4 rounded-full bg-primary shadow-lg shadow-primary/50 group-hover:w-6 group-hover:h-6 transition-all duration-300" />
+                )}
               </div>
 
               {/* Hover tooltip */}

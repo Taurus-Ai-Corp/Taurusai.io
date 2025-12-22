@@ -50,7 +50,7 @@ export default function Pricing() {
       
       <section className="pt-32 pb-16 relative overflow-hidden">
         {/* Logo Animation Background */}
-        <VideoBackground src="/logo-animation.mp4" opacity={0.15} overlay={false} />
+        <VideoBackground src="/logo-animation.mp4" opacity={0.35} overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/95 to-background" />
         <div className="container relative z-10">
           <div className="text-center max-w-3xl mx-auto">
