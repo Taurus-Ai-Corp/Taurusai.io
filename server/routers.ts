@@ -12,6 +12,7 @@ import { subscriptionTiers, formatPrice } from "./stripe/products";
 import { sendEmail, formatConsultationConfirmationEmail } from "./email/gmail";
 import { calculateLeadScore, getLeadPriority, getRecommendedAction } from "./utils/leadScoring";
 import { supabaseRouter } from "./routers/supabase";
+import { aiChatRouter } from "./routers/aiChat";
 
 export const appRouter = router({
   system: systemRouter,
@@ -710,6 +711,9 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
 
   // Supabase Features (Real-time, AI Search)
   supabase: supabaseRouter,
+
+  // AI-Powered Chat
+  aiChat: aiChatRouter,
 });
 
 export type AppRouter = typeof appRouter;

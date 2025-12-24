@@ -8,6 +8,8 @@ export interface ChatMessage {
   sender_name: string;
   content: string;
   created_at: string;
+  message_type?: 'user' | 'ai' | 'human' | 'system';
+  metadata?: Record<string, any>;
 }
 
 export function useRealtimeChat(roomId: string) {

@@ -19,9 +19,11 @@ import AdminBookings from "./pages/AdminBookings";
 import AdminAnalytics from "./pages/AdminAnalytics";
 import AdminLeads from "./pages/AdminLeads";
 import AdminSequences from "./pages/AdminSequences";
+import AdminChats from "./pages/AdminChats";
 import Survey from "./pages/Survey";
 import LiveChat from "./components/LiveChat";
 import ScrollToTop from "./components/ScrollToTop";
+import { ChatWidget } from "./components/ChatWidget";
 
 function Router() {
   return (
@@ -44,10 +46,20 @@ function Router() {
       <Route path="/admin/analytics" component={AdminAnalytics} />
       <Route path="/admin/leads" component={AdminLeads} />
       <Route path="/admin/sequences" component={AdminSequences} />
+      <Route path="/admin/chats" component={AdminChats} />
       <Route path="/survey" component={Survey} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
+  );
+}
+
+function AppWithChat() {
+  return (
+    <>
+      <Router />
+      <ChatWidget />
+    </>
   );
 }
 
@@ -59,7 +71,7 @@ function App() {
           <Toaster />
           <ScrollToTop />
           <Router />
-          <LiveChat />
+          <ChatWidget />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
