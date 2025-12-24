@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { useEffect } from "react";
+import { organizationSchema, productSchemas, breadcrumbSchema, injectStructuredData } from "@/lib/structuredData";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +31,17 @@ import {
 } from "lucide-react";
 
 // Product data with images and links
+
+// Inject structured data on mount
+function useStructuredData() {
+  useEffect(() => {
+    injectStructuredData(organizationSchema);
+    productSchemas.forEach(schema => injectStructuredData(schema));
+    injectStructuredData(breadcrumbSchema([
+      { name: "Home", url: "https://taurusai.io" }
+    ]));
+  }, []);
+}
 const productData = [
   {
     slug: "bizflow",
@@ -68,6 +82,8 @@ const productData = [
 ];
 
 export default function Home() {
+  useStructuredData();
+  useCanonicalUrl('/');
   const { data: testimonials } = trpc.testimonials.featured.useQuery();
   const { data: caseStudies } = trpc.caseStudies.featured.useQuery();
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);

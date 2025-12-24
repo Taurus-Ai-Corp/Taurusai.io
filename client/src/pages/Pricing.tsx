@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -14,6 +15,7 @@ import { toast } from "sonner";
 import { Check, Zap, Shield, ArrowRight, Clock, Users } from "lucide-react";
 
 export default function Pricing() {
+  useCanonicalUrl("/pricing");
   const { isAuthenticated } = useAuth();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('yearly');
   

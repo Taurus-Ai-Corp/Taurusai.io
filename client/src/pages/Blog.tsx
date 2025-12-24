@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function Blog() {
+  useCanonicalUrl("/blog");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { data: allPosts } = trpc.blog.list.useQuery();
   const { data: authors } = trpc.authors.list.useQuery();

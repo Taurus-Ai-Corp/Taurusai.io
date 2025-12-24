@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { Link, useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
 } from "lucide-react";
 
 export default function CaseStudies() {
+  useCanonicalUrl("/case-studies");
   const params = useParams<{ slug?: string }>();
   const { data: caseStudies } = trpc.caseStudies.list.useQuery();
   const [selectedStudy, setSelectedStudy] = useState<any>(null);

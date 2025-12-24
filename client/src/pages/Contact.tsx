@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,7 @@ const products = [
 ];
 
 export default function Contact() {
+  useCanonicalUrl("/contact");
   const [location] = useLocation();
   const isDemo = location === "/demo";
   

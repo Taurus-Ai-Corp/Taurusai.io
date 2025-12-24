@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { Link, useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -61,6 +62,7 @@ const productIcons: Record<string, React.ReactNode> = {
 };
 
 export default function Products() {
+  useCanonicalUrl("/products");
   const params = useParams<{ slug?: string }>();
   const { data: products } = trpc.products.list.useQuery();
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);

@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,6 +40,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 export default function InvestorRelations() {
+  useCanonicalUrl("/investors");
   const { data: assets } = trpc.assets.list.useQuery();
   const trackDownload = trpc.assets.trackDownload.useMutation();
 

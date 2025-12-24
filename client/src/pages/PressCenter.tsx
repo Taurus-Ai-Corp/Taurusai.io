@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,7 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function PressCenter() {
+  useCanonicalUrl("/press");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { data: pressReleases } = trpc.press.list.useQuery();
   const { data: mediaKit } = trpc.assets.byCategory.useQuery({ category: "media-kit" });

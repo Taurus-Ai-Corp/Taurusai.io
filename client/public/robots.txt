@@ -1,0 +1,19 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://taurusai.io/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin/
+
+# Allow all other pages
+Allow: /products
+Allow: /pricing
+Allow: /case-studies
+Allow: /blog
+Allow: /contact
+Allow: /insights
+Allow: /investors
+Allow: /press

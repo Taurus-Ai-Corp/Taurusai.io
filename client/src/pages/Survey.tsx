@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useCanonicalUrl } from "@/hooks/useCanonicalUrl";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function Survey() {
+  useCanonicalUrl("/survey");
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
