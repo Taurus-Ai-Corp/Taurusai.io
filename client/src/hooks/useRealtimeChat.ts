@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { supabase, isSupabaseAvailable } from '@/lib/supabase/client';
 
 export interface ChatMessage {
   id: string;
@@ -18,13 +18,14 @@ export function useRealtimeChat(roomId: string) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!roomId) {
+    if (!roomId || !isSupabaseAvailable()) {
       setIsLoading(false);
       return;
     }
 
     // Fetch existing messages
     const fetchMessages = async () => {
+      if (!supabase) return;
       try {
         const { data, error } = await supabase
           .from('chat_messages')
@@ -44,6 +45,7 @@ export function useRealtimeChat(roomId: string) {
     fetchMessages();
 
     // Subscribe to new messages in real-time
+    if (!supabase) return;
     const channel = supabase
       .channel(`room:${roomId}`)
       .on(
@@ -61,7 +63,7 @@ export function useRealtimeChat(roomId: string) {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (supabase && channel) supabase.removeChannel(channel);
     };
   }, [roomId]);
 
@@ -70,6 +72,9 @@ export function useRealtimeChat(roomId: string) {
     senderId: string,
     senderName: string
   ) => {
+    if (!supabase) {
+      throw new Error('Supabase is not available');
+    }
     try {
       const { error } = await supabase.from('chat_messages').insert({
         room_id: roomId,

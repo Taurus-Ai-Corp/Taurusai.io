@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { supabase, isSupabaseAvailable } from '@/lib/supabase/client';
 
 export interface Notification {
   id: string;
@@ -17,13 +17,14 @@ export function useNotifications(userId: string | null) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !isSupabaseAvailable()) {
       setIsLoading(false);
       return;
     }
 
     // Fetch existing notifications
     const fetchNotifications = async () => {
+      if (!supabase) return;
       try {
         const { data, error } = await supabase
           .from('notifications')
@@ -48,6 +49,7 @@ export function useNotifications(userId: string | null) {
     fetchNotifications();
 
     // Subscribe to new notifications in real-time
+    if (!supabase) return;
     const channel = supabase
       .channel(`notifications:${userId}`)
       .on(
@@ -90,11 +92,12 @@ export function useNotifications(userId: string | null) {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (supabase && channel) supabase.removeChannel(channel);
     };
   }, [userId]);
 
   const markAsRead = async (notificationId: string) => {
+    if (!supabase) return;
     try {
       const { error } = await supabase
         .from('notifications')
@@ -121,8 +124,8 @@ export function useNotifications(userId: string | null) {
       
       if (unreadIds.length === 0) return;
 
-      const { error } = await supabase
-        .from('notifications')
+      if (!supabase) return;
+      const { error } = await supabase.from('notifications')
         .update({ is_read: true })
         .in('id', unreadIds);
       

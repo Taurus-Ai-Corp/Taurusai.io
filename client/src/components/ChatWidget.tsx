@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { trpc } from '@/lib/trpc';
 import { useRealtimeChat, ChatMessage } from '@/hooks/useRealtimeChat';
-import { supabase } from '@/lib/supabase/client';
+import { supabase, isSupabaseAvailable } from '@/lib/supabase/client';
 
 interface ChatWidgetProps {
   productSlug?: string;
@@ -36,6 +36,10 @@ export function ChatWidget({ productSlug }: ChatWidgetProps) {
   }, [messages]);
 
   const createChatRoom = async () => {
+    if (!isSupabaseAvailable() || !supabase) {
+      console.warn('Supabase is not available. Chat functionality is disabled.');
+      return;
+    }
     try {
       const { data, error } = await supabase
         .from('chat_rooms')
@@ -52,6 +56,7 @@ export function ChatWidget({ productSlug }: ChatWidgetProps) {
       setRoomId(data.id);
 
       // Add participant
+      if (!supabase) return;
       await supabase.from('chat_participants').insert({
         room_id: data.id,
         user_id: userId,
@@ -59,6 +64,7 @@ export function ChatWidget({ productSlug }: ChatWidgetProps) {
       });
 
       // Send welcome message
+      if (!supabase) return;
       await supabase.from('chat_messages').insert({
         room_id: data.id,
         sender_id: 'ai-assistant',

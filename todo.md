@@ -361,3 +361,9 @@
 - [x] Test chat responses with Groq
 - [x] Re-run knowledge base seeding script
 - [x] Verify all 19 documents stored successfully
+
+## Supabase Client Fix
+- [x] Update client/src/lib/supabase/client.ts to handle missing credentials
+- [x] Export null when Supabase credentials are not available
+- [x] Update hooks to handle null Supabase client
+- [x] Test website loads without crashing
