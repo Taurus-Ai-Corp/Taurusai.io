@@ -373,3 +373,14 @@
 - [x] Add VITE_SUPABASE_ANON_KEY environment variable
 - [x] Run SQL migration to create match_documents function (guide created)
 - [x] Test AI chat widget with Supabase enabled (ready for user testing)
+
+## Product Logo Integration
+- [x] Copy Q-Grid logo to public directory
+- [x] Copy BizFlow AI logo to public directory
+- [x] Copy Taurus AI logo to public directory
+- [x] Copy AssetGrid logo to public directory
+- [x] Update Q-Grid product page with logo
+- [x] Update BizFlow AI product page with logo
+- [x] Update AssetGrid product page with logo
+- [x] Create animated Taurus AI logo background for Agentic Workflow section
+- [x] Test all logo displays and animations

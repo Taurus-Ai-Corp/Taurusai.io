@@ -61,6 +61,25 @@ const agentTypes = [
 export default function AgenticWorkflow() {
   return (
     <section className="py-24 bg-gradient-to-b from-background via-card/30 to-background relative overflow-hidden">
+      {/* Animated Taurus AI Logo Background */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+        <motion.img
+          src="/taurus-ai-logo.png"
+          alt="Taurus AI"
+          className="w-[800px] h-[800px] object-contain"
+          animate={{
+            scale: [1, 1.1, 1],
+            rotate: [0, 5, 0, -5, 0],
+            opacity: [0.05, 0.08, 0.05],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+
       {/* Animated Background Grid */}
       <div className="absolute inset-0 opacity-10">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">

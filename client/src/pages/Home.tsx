@@ -49,6 +49,7 @@ const productData = [
     tagline: "AI-Powered Workflow Automation",
     description: "Intelligent automation engine for complex business processes",
     image: "/images/cmgvdpkm.manus.space-BizFlowAI-AdvancedAutomationPlatform-fpscreenshot.png",
+    logo: "/bizflow-logo.jpg",
     link: "https://cmgvdpkm.manus.space",
     icon: <Workflow className="w-6 h-6" />,
   },
@@ -58,6 +59,7 @@ const productData = [
     tagline: "Quantum-Resistant Security",
     description: "Post-quantum cryptography infrastructure for enterprise",
     image: "/images/q-grid.net-q-gridnetapp-fpscreenshot.jpeg",
+    logo: "/q-grid-logo.png",
     link: "https://q-grid.net",
     icon: <Shield className="w-6 h-6" />,
   },
@@ -67,6 +69,7 @@ const productData = [
     tagline: "Hedera-Powered RWA Tokenization",
     description: "Real-world asset tokenization on blockchain",
     image: "/images/FinancialDataDisplay.png",
+    logo: "/assetgrid-logo.png",
     link: "https://assetgrid.taurusai.io",
     icon: <Database className="w-6 h-6" />,
   },
@@ -266,8 +269,12 @@ export default function Home() {
                   
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                        {product.icon}
+                      <div className="w-12 h-12 rounded-lg bg-background/50 flex items-center justify-center overflow-hidden">
+                        {product.logo ? (
+                          <img src={product.logo} alt={`${product.name} logo`} className="w-full h-full object-contain" />
+                        ) : (
+                          <div className="text-primary">{product.icon}</div>
+                        )}
                       </div>
                       <div>
                         <h3 className="font-bold text-foreground">{product.name}</h3>
