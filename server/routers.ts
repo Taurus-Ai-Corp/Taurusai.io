@@ -11,6 +11,7 @@ import { createCalendarEvent, formatConsultationEvent, generateMeetLink } from "
 import { subscriptionTiers, formatPrice } from "./stripe/products";
 import { sendEmail, formatConsultationConfirmationEmail } from "./email/gmail";
 import { calculateLeadScore, getLeadPriority, getRecommendedAction } from "./utils/leadScoring";
+import { supabaseRouter } from "./routers/supabase";
 
 export const appRouter = router({
   system: systemRouter,
@@ -706,6 +707,9 @@ ${input.message ? `💬 Notes:\n${input.message}\n\n` : ''}📆 Calendar: ${cale
         return { success: true };
       }),
   }),
+
+  // Supabase Features (Real-time, AI Search)
+  supabase: supabaseRouter,
 });
 
 export type AppRouter = typeof appRouter;

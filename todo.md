@@ -310,3 +310,17 @@
 
 ## Accessibility Fixes
 - [x] Fix Dialog accessibility error on /demo page (add DialogTitle)
+
+## Supabase Real-time & AI Integration
+- [x] Install @supabase/supabase-js package
+- [x] Request Supabase environment variables (URL, anon key, service role key)
+- [x] Create Supabase client initialization files (client.ts, admin client)
+- [x] Create useRealtimeChat hook for live chat functionality
+- [x] Create useNotifications hook for real-time notifications
+- [x] Implement semantic search function with vector embeddings
+- [ ] Create LiveChat component with real-time messaging
+- [ ] Create Notifications component with real-time updates
+- [ ] Add notification badge to navbar
+- [ ] Test real-time chat functionality
+- [ ] Test real-time notifications
+- [ ] Test AI semantic search
