@@ -307,3 +307,6 @@
 - [x] Implement canonical URLs in all page components
 - [x] Add robots.txt file
 - [ ] Test structured data with Google Rich Results Test
+
+## Accessibility Fixes
+- [x] Fix Dialog accessibility error on /demo page (add DialogTitle)
