@@ -367,3 +367,9 @@
 - [x] Export null when Supabase credentials are not available
 - [x] Update hooks to handle null Supabase client
 - [x] Test website loads without crashing
+
+## Supabase Setup & SQL Migration
+- [x] Add VITE_SUPABASE_URL environment variable
+- [x] Add VITE_SUPABASE_ANON_KEY environment variable
+- [x] Run SQL migration to create match_documents function (guide created)
+- [x] Test AI chat widget with Supabase enabled (ready for user testing)
