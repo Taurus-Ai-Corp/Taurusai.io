@@ -1,6 +1,10 @@
 import { semanticSearch } from './semanticSearch';
 import { ENV } from '../_core/env';
 
+// Use Groq for chat completions (faster, higher rate limits)
+const GROQ_BASE_URL = 'https://api.groq.com/openai/v1';
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+
 export interface ChatContext {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -20,8 +24,12 @@ export async function generateAIChatResponse(
   conversationHistory: ChatContext[] = [],
   productSlug?: string
 ): Promise<ChatResponse> {
-  if (!ENV.openaiApiKey) {
-    throw new Error('OpenAI API key not configured');
+  const apiKey = ENV.groqApiKey || ENV.openaiApiKey;
+  const baseURL = ENV.groqApiKey ? GROQ_BASE_URL : 'https://api.openai.com/v1';
+  const model = ENV.groqApiKey ? GROQ_MODEL : 'gpt-4o-mini';
+  
+  if (!apiKey) {
+    throw new Error('No LLM API key configured (GROQ_API_KEY or OPENAI_API_KEY)');
   }
 
   // Search for relevant context using semantic search
@@ -62,15 +70,15 @@ Guidelines:
     { role: 'user', content: userMessage }
   ];
 
-  // Call OpenAI API
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  // Call Groq or OpenAI API
+  const response = await fetch(`${baseURL}/chat/completions`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${ENV.openaiApiKey}`,
+      'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini',
+      model,
       messages,
       temperature: 0.7,
       max_tokens: 500
@@ -107,8 +115,12 @@ export async function* streamAIChatResponse(
   conversationHistory: ChatContext[] = [],
   productSlug?: string
 ): AsyncGenerator<string> {
-  if (!ENV.openaiApiKey) {
-    throw new Error('OpenAI API key not configured');
+  const apiKey = ENV.groqApiKey || ENV.openaiApiKey;
+  const baseURL = ENV.groqApiKey ? GROQ_BASE_URL : 'https://api.openai.com/v1';
+  const model = ENV.groqApiKey ? GROQ_MODEL : 'gpt-4o-mini';
+  
+  if (!apiKey) {
+    throw new Error('No LLM API key configured (GROQ_API_KEY or OPENAI_API_KEY)');
   }
 
   // Search for relevant context

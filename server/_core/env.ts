@@ -11,4 +11,6 @@ export const ENV = {
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+  groqApiKey: process.env.GROQ_API_KEY ?? "",
+  hfApiKey: process.env.HF_API_KEY ?? "",
 };

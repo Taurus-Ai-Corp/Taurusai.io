@@ -10,31 +10,76 @@ export interface SearchResult {
 }
 
 /**
- * Generate embedding for text using OpenAI
+ * Generate embeddings using Ollama's nomic-embed-text model (local, no rate limits)
+ * Falls back to HuggingFace if Ollama is not available
  */
 async function generateEmbedding(text: string): Promise<number[]> {
-  if (!ENV.openaiApiKey) {
-    throw new Error('OpenAI API key not configured');
+  // Try Ollama first (local, unlimited, free)
+  try {
+    const ollamaResponse = await fetch('http://localhost:11434/api/embeddings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'nomic-embed-text',
+        prompt: text
+      })
+    });
+
+    if (ollamaResponse.ok) {
+      const data = await ollamaResponse.json();
+      let embedding = data.embedding;
+      
+      // Pad to 1536 dimensions if needed (Ollama nomic-embed-text is 768)
+      if (embedding.length < 1536) {
+        embedding = [...embedding, ...Array(1536 - embedding.length).fill(0)];
+      }
+      
+      return embedding;
+    }
+  } catch (error) {
+    console.warn('Ollama not available, falling back to HuggingFace:', error);
   }
 
-  const response = await fetch('https://api.openai.com/v1/embeddings', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${ENV.openaiApiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      model: 'text-embedding-ada-002',
-      input: text
-    })
-  });
+  // Fallback to HuggingFace (free tier, some rate limits)
+  if (ENV.hfApiKey) {
+    const hfResponse = await fetch('https://api-inference.huggingface.co/models/BAAI/bge-large-en-v1.5', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${ENV.hfApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ inputs: text })
+    });
 
-  if (!response.ok) {
-    throw new Error(`OpenAI API error: ${response.statusText}`);
+    if (hfResponse.ok) {
+      const embedding = await hfResponse.json();
+      return embedding;
+    }
   }
 
-  const data = await response.json();
-  return data.data[0].embedding;
+  // Final fallback to OpenAI if available
+  if (ENV.openaiApiKey) {
+    const response = await fetch('https://api.openai.com/v1/embeddings', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${ENV.openaiApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'text-embedding-ada-002',
+        input: text
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.data[0].embedding;
+  }
+
+  throw new Error('No embedding service available (Ollama, HuggingFace, or OpenAI)');
 }
 
 /**
@@ -76,9 +121,9 @@ export async function semanticSearch(
  * Store document with embedding in vector database
  */
 export async function storeDocument(
+  id: string,
   content: string,
-  metadata: Record<string, any> = {},
-  productSlug?: string
+  metadata: Record<string, any> = {}
 ): Promise<string> {
   // Generate embedding
   const embedding = await generateEmbedding(content);
@@ -87,10 +132,11 @@ export async function storeDocument(
   const { data, error } = await supabaseAdmin
     .from('documents')
     .insert({
+      id,
       content,
       metadata,
       embedding,
-      product_slug: productSlug
+      product_slug: metadata.productSlug
     })
     .select('id')
     .single();

@@ -338,3 +338,26 @@
 - [x] Test AI responses with semantic search context
 - [x] Test real-time message delivery
 - [x] Test human escalation flow
+
+## Knowledge Base Seeding
+- [ ] Create script to extract product information from database
+- [ ] Create script to extract case study content
+- [ ] Add FAQ content to knowledge base
+- [ ] Add product technical specifications
+- [ ] Create seeding script with vector embeddings
+- [ ] Run seeding script to populate Supabase documents table
+- [ ] Verify documents are searchable
+- [ ] Test AI chat responses with seeded content
+
+## Hybrid LLM Setup (Ollama + Groq)
+- [x] Install Ollama on server
+- [x] Pull llama3.2 model for chat
+- [x] Pull nomic-embed-text model for embeddings
+- [x] Add GROQ_API_KEY to environment variables
+- [x] Add HF_API_KEY to environment variables
+- [x] Update chatService.ts to use Groq API
+- [x] Update semanticSearch.ts to use Ollama embeddings
+- [x] Test embeddings generation with Ollama
+- [x] Test chat responses with Groq
+- [x] Re-run knowledge base seeding script
+- [x] Verify all 19 documents stored successfully

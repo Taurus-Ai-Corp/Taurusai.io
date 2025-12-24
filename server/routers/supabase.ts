@@ -23,15 +23,20 @@ export const supabaseRouter = router({
   // Store Document
   storeDocument: protectedProcedure
     .input(z.object({
+      id: z.string(),
       content: z.string().min(1),
       metadata: z.record(z.string(), z.any()).optional(),
       productSlug: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
+      const metadata = input.metadata || {};
+      if (input.productSlug) {
+        metadata.productSlug = input.productSlug;
+      }
       const documentId = await storeDocument(
+        input.id,
         input.content,
-        input.metadata,
-        input.productSlug
+        metadata
       );
       return { id: documentId };
     }),
