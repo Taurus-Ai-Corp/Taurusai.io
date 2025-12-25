@@ -384,3 +384,14 @@
 - [x] Update AssetGrid product page with logo
 - [x] Create animated Taurus AI logo background for Agentic Workflow section
 - [x] Test all logo displays and animations
+
+## Visual Editor Changes
+- [ ] Review navbar logo styling changes (bigger, more contrast, retro-futuristic)
+- [ ] Fix product comparison table SVG icons (refer to prompt)
+- [ ] Reposition blocking section on Products page
+- [ ] Prepare for image replacement on Products page
+- [ ] Make "Taurus AI" text bigger and more retro-futuristic
+
+## Neovibe Logo Addition
+- [x] Copy Neovibe logo to public directory
+- [x] Add Neovibe logo to product data in Home.tsx

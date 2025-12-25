@@ -79,6 +79,7 @@ const productData = [
     tagline: "Creative AI Platform",
     description: "Next-generation AI for creative and marketing automation",
     image: "/images/neovibe.png",
+    logo: "/neovibe-logo.png",
     link: "https://neovibe.taurusai.io",
     icon: <Sparkles className="w-6 h-6" />,
   },
