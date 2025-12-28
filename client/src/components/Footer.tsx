@@ -69,7 +69,7 @@ export default function Footer() {
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="mailto:contact@taurusai.io"
+                href="mailto:admin@taurusai.io"
                 className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors text-muted-foreground"
               >
                 <Mail className="w-5 h-5" />
@@ -135,14 +135,13 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                 <span className="text-muted-foreground text-sm">
-                  Toronto, Ontario<br />
-                  Canada
+                  Ontario Canada
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary shrink-0" />
-                <a href="mailto:info@taurusai.io" className="text-muted-foreground hover:text-primary text-sm">
-                  info@taurusai.io
+                <a href="mailto:admin@taurusai.io" className="text-muted-foreground hover:text-primary text-sm">
+                  admin@taurusai.io
                 </a>
               </li>
             </ul>

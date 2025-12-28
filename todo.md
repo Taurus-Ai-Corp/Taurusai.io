@@ -414,3 +414,16 @@
 - [x] Add all project files
 - [x] Create initial commit
 - [x] Push to GitHub
+
+## Q-Grid Domain Link Update
+- [x] Find all Q-Grid product links (already correct: https://q-grid.net)
+- [x] Update links to https://q-grid.net (already set correctly)
+- [x] Test all updated links (verified in code)
+- [ ] Push changes to GitHub
+
+## Contact Information Updates
+- [x] Verify email changed to admin@taurusai.io
+- [x] Verify phone changed to +1 519-331-3285
+- [x] Verify address updated to Ontario, CA
+- [x] Remove marked elements (business hours section, global offices)
+- [x] Test contact page display

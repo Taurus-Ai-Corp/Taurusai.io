@@ -355,8 +355,8 @@ export default function Contact() {
                       <Mail className="w-5 h-5 text-primary mt-0.5" />
                       <div>
                         <div className="font-medium text-foreground">Email</div>
-                        <a href="mailto:contact@taurus.ai" className="text-muted-foreground hover:text-primary">
-                          contact@taurus.ai
+                        <a href="mailto:admin@taurusai.io" className="text-muted-foreground hover:text-primary">
+                          admin@taurusai.io
                         </a>
                       </div>
                     </div>
@@ -364,8 +364,8 @@ export default function Contact() {
                       <Phone className="w-5 h-5 text-primary mt-0.5" />
                       <div>
                         <div className="font-medium text-foreground">Phone</div>
-                        <a href="tel:+911234567890" className="text-muted-foreground hover:text-primary">
-                          +91 123 456 7890
+                        <a href="tel:+15193313285" className="text-muted-foreground hover:text-primary">
+                          +1 519-331-3285
                         </a>
                       </div>
                     </div>
@@ -374,17 +374,16 @@ export default function Contact() {
                       <div>
                         <div className="font-medium text-foreground">Headquarters</div>
                         <p className="text-muted-foreground">
-                          Cyber City, DLF Phase 2<br />
-                          Gurugram, Haryana 122002
+                          Ontario, CA
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Clock className="w-5 h-5 text-primary mt-0.5" />
+                      <MapPin className="w-5 h-5 text-primary mt-0.5" />
                       <div>
-                        <div className="font-medium text-foreground">Business Hours</div>
+                        <div className="font-medium text-foreground">Regional Corporate Hub</div>
                         <p className="text-muted-foreground">
-                          Mon - Fri: 9:00 AM - 6:00 PM IST
+                          Dubai Silicon Oasis, UAE
                         </p>
                       </div>
                     </div>
@@ -416,29 +415,7 @@ export default function Contact() {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-foreground mb-4">Global Offices</h3>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-primary" />
-                      <span className="text-muted-foreground">Mumbai, India (HQ)</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-primary" />
-                      <span className="text-muted-foreground">Singapore</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-primary" />
-                      <span className="text-muted-foreground">Dubai, UAE</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-primary" />
-                      <span className="text-muted-foreground">London, UK</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+
             </div>
           </div>
         </div>
