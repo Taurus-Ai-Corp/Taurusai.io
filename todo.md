@@ -407,3 +407,10 @@
 - [x] Replace product detail screenshot with corresponding logo
 - [x] Delete unnecessary paragraph on Products page
 - [x] Fix navbar "Taurus AI" text to stay on same line
+
+## GitHub Repository Push
+- [x] Initialize git repository
+- [x] Configure GitHub remote
+- [ ] Add all project files
+- [ ] Create initial commit
+- [ ] Push to GitHub
