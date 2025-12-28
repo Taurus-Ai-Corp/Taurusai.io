@@ -395,3 +395,15 @@
 ## Neovibe Logo Addition
 - [x] Copy Neovibe logo to public directory
 - [x] Add Neovibe logo to product data in Home.tsx
+
+## UI Enhancements
+- [x] Increase navbar "Taurus AI" text size to 2xl
+- [x] Add cyan-to-purple gradient effect to navbar text
+- [x] Fix products page sticky selector blocking view
+- [x] Add hover animations to product logos (scale + glow)
+
+## Products Page Logo Fixes
+- [x] Replace product selector icons with actual logos
+- [x] Replace product detail screenshot with corresponding logo
+- [x] Delete unnecessary paragraph on Products page
+- [x] Fix navbar "Taurus AI" text to stay on same line

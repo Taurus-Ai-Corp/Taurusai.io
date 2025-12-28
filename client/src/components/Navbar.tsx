@@ -60,7 +60,7 @@ export default function Navbar() {
               alt="Taurus AI" 
               className="h-10 w-auto" style={{backgroundColor: '#0c1813', width: '45px', height: '45px'}}
             />
-            <span className="font-bold text-xl text-foreground">Taurus AI</span>
+            <span className="font-bold text-2xl gradient-text-multi whitespace-nowrap">Taurus AI</span>
           </Link>
 
           {/* Desktop Navigation */}

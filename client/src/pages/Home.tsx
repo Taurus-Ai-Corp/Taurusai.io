@@ -251,8 +251,8 @@ export default function Home() {
             {productData.map((product) => (
               <Card
                 key={product.slug}
-                className={`card-hover product-card bg-card cursor-pointer transition-all duration-300 ${
-                  hoveredProduct === product.slug ? "border-primary glow-cyan" : ""
+                className={`group overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer ${
+                  hoveredProduct === product.slug ? "glow-cyan" : ""
                 }`}
                 onMouseEnter={() => setHoveredProduct(product.slug)}
                 onMouseLeave={() => setHoveredProduct(null)}
@@ -272,7 +272,7 @@ export default function Home() {
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-12 h-12 rounded-lg bg-background/50 flex items-center justify-center overflow-hidden">
                         {product.logo ? (
-                          <img src={product.logo} alt={`${product.name} logo`} className="w-full h-full object-contain" />
+                          <img src={product.logo} alt={`${product.name} logo`} className="w-full h-full object-contain transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]" />
                         ) : (
                           <div className="text-primary">{product.icon}</div>
                         )}

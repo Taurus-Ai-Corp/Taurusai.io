@@ -24,33 +24,34 @@ import {
 import ProductComparisonTable from "@/components/ProductComparisonTable";
 
 // Product data with images and external links
-const productData: Record<string, { image: string; screenshot: string; link: string; color: string; logo?: string }> = {
+const productData: Record<string, { image: string; screenshot: string; link: string; color: string; logo: string }> = {
   bizflow: {
     image: "/images/TaurusAI.BizFlow™.png",
     screenshot: "/images/cmgvdpkm.manus.space-BizFlowAI-AdvancedAutomationPlatform-fpscreenshot.png",
     link: "https://cmgvdpkm.manus.space",
     color: "from-cyan to-purple",
-    logo: "/images/bizflow-logo.jpg",
+    logo: "/bizflow-logo.jpg",
   },
   "q-grid": {
     image: "/images/qgrid-logo.png",
     screenshot: "/images/q-grid.net-q-gridnetapp-fpscreenshot.jpeg",
     link: "https://q-grid.net",
     color: "from-quantum to-cyan",
-    logo: "/images/qgrid-logo.png",
+    logo: "/q-grid-logo.png",
   },
   assetgrid: {
     image: "/images/FinancialDataDisplay.png",
     screenshot: "/images/8go3y1FWhxQYIxaEf7tkg.png",
     link: "https://assetgrid.taurusai.io",
     color: "from-success to-cyan",
-    logo: "/images/assetgrid-logo.png",
+    logo: "/assetgrid-logo.png",
   },
   neovibe: {
     image: "/images/neovibe.png",
     screenshot: "/images/GlitchedBrainArtwork.png",
     link: "https://neovibe.taurusai.io",
     color: "from-warning to-quantum",
+    logo: "/neovibe-logo.png",
   },
 };
 
@@ -95,16 +96,13 @@ export default function Products() {
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
               Quantum-Safe Enterprise Platform
             </h1>
-            <p className="text-xl text-muted-foreground">
-              Four integrated products designed to transform your financial infrastructure 
-              with quantum-resistant security, intelligent automation, and enterprise-grade reliability.
-            </p>
+
           </div>
         </div>
       </section>
 
       {/* Product Selector */}
-      <section className="py-8 border-b border-border sticky top-16 lg:top-20 bg-background/95 backdrop-blur z-40">
+      <section className="py-8 border-b border-border bg-background">
         <div className="container">
           <div className="flex flex-wrap gap-4">
             {products?.map((product) => {
@@ -123,8 +121,12 @@ export default function Products() {
                       : "border-border bg-card hover:border-primary/30"
                   }`}
                 >
-                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${pData?.color || 'from-primary to-cyan'} flex items-center justify-center text-white`}>
-                    {productIcons[product.icon || "Workflow"]}
+                  <div className="w-12 h-12 rounded-lg bg-background/50 flex items-center justify-center overflow-hidden">
+                    {pData?.logo ? (
+                      <img src={pData.logo} alt={product.name} className="w-full h-full object-contain" />
+                    ) : (
+                      productIcons[product.icon || "Workflow"]
+                    )}
                   </div>
                   <div className="text-left">
                     <div className="font-bold text-foreground">{product.name}</div>
@@ -208,9 +210,9 @@ export default function Products() {
               <div className="relative">
                 <div className="rounded-2xl overflow-hidden border border-border shadow-2xl">
                   <img 
-                    src={activeProductData?.screenshot || activeProductData?.image} 
+                    src={activeProductData?.logo || activeProductData?.screenshot || activeProductData?.image} 
                     alt={activeProduct.name}
-                    className="w-full h-auto"
+                    className="w-full h-auto object-contain bg-background p-8"
                   />
                 </div>
                 
